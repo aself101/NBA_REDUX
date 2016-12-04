@@ -9,15 +9,36 @@ const Boxscore = ({team1, team2}) => {
   const team2ID = team2.teamId;
 
   return (
-    <div> <br />
+    <div className="boxscores-wrapper"> <br />
       <div className="card boxscores">
         <div className="panel panel-light">
           <div className="panel-heading">
-            <center>
-              <h3 className="panel-title">
-                {team1.teamAbbreviation} <span id={team1ID}><b>{team1.pts}</b></span> - <span id={team2ID}><b>{team2.pts}</b></span> {team2.teamAbbreviation}
-              </h3>
-            </center>
+            <div className="row">
+              <div className="col-sm-6">
+                <center>
+                  <img src={`img/${team1.teamAbbreviation}.png`} /> <br />
+                </center>
+              </div>
+              <div className="col-sm-6">
+                <center>
+                  <img src={`img/${team2.teamAbbreviation}.png`} /> <br />
+                </center>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-sm-6">
+                <center>
+                  {team1.teamAbbreviation}
+                  <h3 className="panel-title"> <span id={team1ID}><b>{team1.pts}</b></span></h3>
+                </center>
+              </div>
+              <div className="col-sm-6">
+                <center>
+                  {team2.teamAbbreviation}
+                  <h3 className="panel-title"><span id={team2ID}><b>{team2.pts}</b></span></h3>
+                </center>
+              </div>
+            </div>
           </div>
           <div className="panel-body">
             <div className="row">
