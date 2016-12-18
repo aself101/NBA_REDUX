@@ -6,7 +6,7 @@ import * as actions from '../actions';
 import PlayerTable from '../components/playerTable';
 import BoxScores from './boxscores';
 import Header from './header';
-import Player from './players';
+import Players from './players';
 
 class Profile extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class Profile extends Component {
                 <BoxScores />
               </div>
               <div role="tabpanel" className="tab-pane" id="players">
-
+                <Players players={this.props.players} />
 
               </div>
               <div role="tabpanel" className="tab-pane" id="teams">

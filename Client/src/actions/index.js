@@ -71,6 +71,8 @@ export function signupUser({email, password}) {
 }
 // Fetches data from server: Not set up to pull any data
 export function fetchBoxScoresServer(date) {
+  $('.scores').fadeOut();
+  $('.loading').css('display','inline');
   return function(dispatch) {
     axios.get(`${ROOT_URL}/profile`, {
       params: {
@@ -82,6 +84,8 @@ export function fetchBoxScoresServer(date) {
       return JSON.parse(response.request.response);
     })
     .then((response) => {
+      $('.loading').css('display','none');
+      $('.scores').fadeIn();
       return dispatch(fetchBoxScores(response, date));
     });
   }

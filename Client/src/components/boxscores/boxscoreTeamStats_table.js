@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function({team}) {
   return (
-    <table className="table table-responsive table-condensed">
+    <table className="table table-responsive table-condensed table-hover">
       <thead>
         <tr>
           <th>{team.teamAbbreviation}</th><th></th>

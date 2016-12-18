@@ -29,7 +29,7 @@ const common = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Auth',
+      title: 'NBA Dashboard',
       hash: true,
       template: 'template/default_index.ejs',
       appMountId: 'app'
