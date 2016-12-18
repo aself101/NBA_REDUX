@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import * as actions from '../actions';
 
-import PlayerTable from '../components/playerTable';
+import PlayerTable from '../components/player_table';
 import BoxScores from './boxscores';
 import Header from './header';
 import Players from './players';
+import Standings from '../components/standings';
 
 class Profile extends Component {
   constructor(props) {
@@ -27,6 +28,7 @@ class Profile extends Component {
             <div className="col-sm-3 col-md-2 sidebar">
               <ul className="nav nav-sidebar">
                 <li role="presentation" className="active"><a href="#boxscores" aria-controls="boxscores" role="tab" data-toggle="tab">Box Scores</a></li>
+                <li role="presentation"><a href="#standings" aria-controls="standings" role="tab" data-toggle="tab">Standings</a></li>
                 <li role="presentation"><a href="#players" aria-controls="players" role="tab" data-toggle="tab">Players</a></li>
                 <li role="presentation"><a href="#teams" aria-controls="teams" role="tab" data-toggle="tab">Teams</a></li>
                 <li role="presentation"><a href="#shots" aria-controls="shots" role="tab" data-toggle="tab">Shots</a></li>
@@ -39,9 +41,12 @@ class Profile extends Component {
               <div role="tabpanel" className="tab-pane active" id="boxscores">
                 <BoxScores />
               </div>
+              <div role="tabpanel" className="tab-pane" id="standings">
+                <h1 className="page-header">Standings</h1>
+                <Standings standings={this.props.standings} />
+              </div>
               <div role="tabpanel" className="tab-pane" id="players">
                 <Players players={this.props.players} />
-
               </div>
               <div role="tabpanel" className="tab-pane" id="teams">
                 <h1 className="page-header">Teams</h1>
@@ -80,7 +85,8 @@ class Profile extends Component {
 function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
-    players: state.players
+    players: state.players,
+    standings: state.boxscores.standings
   };
 }
 
