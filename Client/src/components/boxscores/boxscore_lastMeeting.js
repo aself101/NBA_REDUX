@@ -20,6 +20,7 @@ const LastMeeting = ({last}) => {
             <center>
               <p>
                 <b>{last.lastGameVisitorTeamName}</b> {last.lastGameVisitorTeamPoints}
+                <span className="help-block">Away</span>
               </p>
             </center>
           </div>
@@ -27,6 +28,7 @@ const LastMeeting = ({last}) => {
             <center>
               <p>
                 <b>{last.lastGameHomeTeamName}</b> {last.lastGameHomeTeamPoints}
+                <span className="help-block">Home</span>
               </p>
             </center>
           </div>

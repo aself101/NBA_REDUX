@@ -86,7 +86,8 @@ function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
     players: state.players,
-    standings: state.boxscores.standings
+    standings: state.boxscores.standings,
+    player: state.player
   };
 }
 

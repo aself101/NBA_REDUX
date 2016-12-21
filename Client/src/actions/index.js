@@ -1,16 +1,14 @@
 import axios from 'axios';
-var nba = require('nba');
-import { data, stats } from 'nba.js';
-
 import { browserHistory } from 'react-router';
-
+import nba from 'nba';
 
 import {
   AUTH_USER, UNAUTH_USER, AUTH_ERROR, FETCH_MESSAGE, FETCH_PLAYERS,
-  FETCH_BOXSCORES, FETCH_ERROR
+  FETCH_BOXSCORES, FETCH_ERROR, FETCH_PLAYER
 } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
+const HEADSHOT_URL = 'https://nba-players.herokuapp.com/players';
 
 function ajax(method, id, data) {
   return new Promise(function(resolve, reject) {
@@ -69,12 +67,12 @@ export function signupUser({email, password}) {
       });
   }
 }
-// Fetches data from server: Not set up to pull any data
+// Fetches data from server
 export function fetchBoxScoresServer(date) {
   $('.scores').fadeOut();
   $('.loading').css('display','inline');
   return function(dispatch) {
-    axios.get(`${ROOT_URL}/profile`, {
+    axios.get(`${ROOT_URL}/boxscores`, {
       params: {
         date: date
       },
@@ -87,11 +85,39 @@ export function fetchBoxScoresServer(date) {
       $('.loading').css('display','none');
       $('.scores').fadeIn();
       return dispatch(fetchBoxScores(response, date));
+    })
+    .catch((err) => {
+      return error(err);
     });
   }
 }
-/* Fetches all NBA player objs
-*/
+
+export function fetchPlayerDataServer(PlayerID, player) {
+  // Split name: Lastname/firstname for headshot in profile
+  $('#player-profile').fadeOut();
+  $('.loading').css('display','inline');
+  return function(dispatch) {
+    axios.get(`${ROOT_URL}/player`, {
+      params: {
+        PlayerID: PlayerID
+      },
+      headers: { authorization: localStorage.getItem('token') }
+    })
+    .then((res) => JSON.parse(res.request.response))
+    .then((res) => {
+      $('#player-profile').fadeIn();
+      $('.loading').css('display','none');
+      return dispatch(fetchPlayerData(res, player, PlayerID));
+    })
+    .catch((err) => {
+      return error(err);
+    });
+  }
+}
+
+/*****************************************************************************
+  SYNCHRONOUS ACTIONS
+*****************************************************************************/
 export function fetchPlayers() {
   return (dispatch) => {
       dispatch({ type: FETCH_PLAYERS, payload: nba.players });
@@ -131,7 +157,18 @@ function fetchBoxScores(boxscores, date) {
   }
 }
 
+function fetchPlayerData(res, player, PlayerID) {
+  var p = player.split(' ');
+  // Nba.com img's
+  var _url = `https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${PlayerID}.png`;
 
+  return {
+    type: FETCH_PLAYER,
+    payload: res,
+    img: _url,
+    name: player
+  };
+}
 
 
 

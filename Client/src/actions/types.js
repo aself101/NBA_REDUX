@@ -5,7 +5,8 @@ export const SIGNIN_USER = 'SIGNIN_USER',
              FETCH_MESSAGE = 'FETCH_MESSAGE',
              FETCH_PLAYERS = 'FETCH_PLAYERS',
              FETCH_BOXSCORES = 'FETCH_BOXSCORES',
-             FETCH_ERROR = 'FETCH_ERROR';
+             FETCH_ERROR = 'FETCH_ERROR',
+             FETCH_PLAYER = 'FETCH_PLAYER';
 
 
 

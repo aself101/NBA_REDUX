@@ -5696,6 +5696,10 @@ to-absolute-glob@^0.1.1:
   dependencies:
     extend-shallow "^2.0.1"
 
+to-age@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/to-age/-/to-age-1.0.0.tgz#fac09bcc24592841c4312bcdbca3984821d4493b"
+
 to-fast-properties@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.2.tgz#f3f5c0c3ba7299a7ef99427e44633257ade43320"

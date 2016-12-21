@@ -1,5 +1,5 @@
 const nba = require('nba');
-
+const _nba = require('nba.js').default;
 /*
   Clean up of initial data pull
   Setup state tree for redux
@@ -53,7 +53,22 @@ exports.boxscores = (req, res, next) => {
     });
 }
 
+exports.player = (req, res, next) => {
+  const PlayerID = req.query.PlayerID;
+  //const careerStats = _nba.stats.playerCareerStats({ PlayerID: PlayerID });
+  const playerInfo = nba.stats.playerInfo({ PlayerID: PlayerID });
+  const playerProfile = nba.stats.playerProfile({ PlayerID: PlayerID });
 
+  //playerProfile.then((v) => console.log(Object.keys(v)));
+
+  Promise.all([playerProfile, playerInfo])
+    .then((stats) => {
+      res.json({ playerStats: stats })
+    })
+    .catch((err) => {
+      return next(err);
+    });
+  }
 
 
 

@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { fetchPlayerDataServer } from '../actions';
+import ProfileIntro from '../components/playerProfile/profile_intro';
+import ProfileAbout from '../components/playerProfile/profile_about';
+import ProfileTabs from '../components/playerProfile/profile_tabs';
+
 class Players extends Component {
   constructor(props) {
     super(props);
+    this.getPlayer = this.getPlayer.bind(this);
   }
   componentDidMount() {
-    //
-  }
-
-  render() {
+    $('#player-profile').css('display','none');
     if (this.props.players) {
       var p = [];
       this.props.players.map((player) => {
@@ -18,36 +21,60 @@ class Players extends Component {
       });
       $("#players-list").typeahead({source: p});
     }
+  }
+  getPlayer(e) {
+    const player = document.getElementById('players-list').value;
+    let i;
+    if (e.key === 'Enter') {
+      for (i in this.props.players) {
+        if (player === this.props.players[i].fullName) {
+          document.getElementById('players-list').value = '';
+          return this.props.fetchPlayerData(this.props.players[i].playerId, player);
+        }
+      }
+      return;
+    } else {
+      for (i in this.props.players) {
+        if (player === this.props.players[i].fullName) {
+          document.getElementById('players-list').value = '';
+          return this.props.fetchPlayerData(this.props.players[i].playerId, player);
+        }
+      }
+      return;
+    }
+
+  }
+
+  render() {
+    const defaultImg = `img/nba-logo.png`;
+
+
     return (
       <div>
         <div className="page-header">
-          <input
-            className="form-control typeahead" placeholder="Player Search..."
-            data-provide="typeahead" autoComplete="off" id="players-list"
-          />
+          <div className="input-group">
+
+            <input
+              className="form-control typeahead" placeholder="Player Search..."
+              data-provide="typeahead" autoComplete="off" id="players-list"
+              onKeyPress={this.getPlayer}
+            />
+            <span className="input-group-btn">
+              <button onClick={this.getPlayer} className="btn btn-default" type="button">Go!</button>
+            </span>
+          </div>
+
         </div>
-        <section className="content">
+        <center><div><i className="fa fa-dribbble loading"></i></div></center>
+        <section className="content" id="player-profile">
           <div className="row">
             <div className="col-md-3">
-              <div className="box box-primary">
-                <div className="box-body box-profile">
-                  <img className="profile-user-img img-responsive img-circle" src="img/nba-logo.png" alt="Player profile picture" />
-                  <h3 className="profile-username text-center">{ this.props.selectedPlayer }</h3>
-                  <p className="text-muted text-center"></p>
+              <ProfileIntro player={this.props.playerInfo} defaultImg={defaultImg} />
+              <ProfileAbout player={this.props.playerInfo} />
+            </div>
+            <div className="col-md-9">
+              <ProfileTabs playerInfo={this.props.playerInfo} playerStats={this.props.playerStats} />
 
-                  <ul className="list-group">
-                    <li className="list-group-item">
-                      <b>Team</b> <a className="pull-right">1,322</a>
-                    </li>
-                    <li className="list-group-item">
-                      <b>Height</b> <a className="pull-right">543</a>
-                    </li>
-                    <li className="list-group-item">
-                      <b>Weight</b> <a className="pull-right">13,287</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -58,17 +85,19 @@ class Players extends Component {
 
 function mapStateToProps(state) {
   return {
-    players: state.players
+    players: state.players,
+    playerStats: state.player.playerStats,
+    playerInfo: state.player.playerInfo
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-
+    fetchPlayerData: fetchPlayerDataServer
   }, dispatch);
 }
 
-export default connect()(Players);
+export default connect(mapStateToProps, mapDispatchToProps)(Players);
 
 
 
