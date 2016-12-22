@@ -3,17 +3,19 @@ import StandingsTable from './standings_table';
 
 const Standings = ({standings}) => {
   if (!standings) return <span></span>;
-  const east = standings.eastStandings;
-  const west = standings.westStandings;
-
+  const east = standings.east;
+  const west = standings.west;
   return (
     <div className="container-fluid">
-      <div>
-        <StandingsTable standing={east} />
-      </div>
-      <hr />
-      <div>
-        <StandingsTable standing={west} />
+      <h1 className="page-header">Standings</h1>
+      <div id="standings">
+        <div>
+          <StandingsTable standings={east} />
+        </div>
+        <hr />
+        <div>
+          <StandingsTable standings={west} />
+        </div>
       </div>
     </div>
 

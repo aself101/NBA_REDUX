@@ -3,6 +3,9 @@ import React from 'react';
 import BoxscoreTable from './boxscore_table';
 import TeamStats from './boxscoreTeamStats_table.js';
 import LastMeeting from './boxscore_lastMeeting';
+import { TEAM_IMG_URL } from '../../actions';
+
+
 
 const Boxscore = ({team1, team2, gameInfo, lastMeeting}) => {
   if (!(team1 || team2)) return <span></span>;
@@ -12,7 +15,7 @@ const Boxscore = ({team1, team2, gameInfo, lastMeeting}) => {
   const team2ID = team2.teamId;
 
   return (
-    <div className="boxscores-wrapper"> <br />
+    <div> <br />
       <div className="card boxscores">
         <div className="panel panel-light">
           <div className="panel-heading boxscore-team-img-wrap">
@@ -21,7 +24,10 @@ const Boxscore = ({team1, team2, gameInfo, lastMeeting}) => {
                 <div>
 
                   <div className="boxscore-team-img">
-                    <img className="img-responsive" src={`img/${team1.teamAbbreviation}.png`} />
+                    <img className="img-responsive"
+                      src={`${TEAM_IMG_URL}/${team1.teamAbbreviation}.svg`}
+                      height="45" width="45"
+                    />
                   </div>
                   <p className="help-block">{team1.teamWinsLosses}</p>
                   <span className="boxscore-team-flex">
@@ -40,7 +46,10 @@ const Boxscore = ({team1, team2, gameInfo, lastMeeting}) => {
                 <div>
 
                   <div className="boxscore-team-img">
-                    <img className="img-responsive" src={`img/${team2.teamAbbreviation}.png`} />
+                    <img className="img-responsive"
+                      src={`${TEAM_IMG_URL}/${team2.teamAbbreviation}.svg`}
+                      height="45" width="45"
+                    />
                   </div>
                   <p className="help-block">{team2.teamWinsLosses}</p>
                   <span className="boxscore-team-flex">

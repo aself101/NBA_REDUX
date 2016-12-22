@@ -4,37 +4,12 @@ import nba from 'nba';
 
 import {
   AUTH_USER, UNAUTH_USER, AUTH_ERROR, FETCH_MESSAGE, FETCH_PLAYERS,
-  FETCH_BOXSCORES, FETCH_ERROR, FETCH_PLAYER
+  FETCH_BOXSCORES, FETCH_ERROR, FETCH_PLAYER, FETCH_TEAMS, FETCH_STANDINGS
 } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
-const HEADSHOT_URL = 'https://nba-players.herokuapp.com/players';
-
-function ajax(method, id, data) {
-  return new Promise(function(resolve, reject) {
-    $.ajax({
-      type: method,
-      url: `${ROOT_URL}/profile?${id}`,
-      dataType: 'json',
-      data: data,
-      headers: { authorization: localStorage.getItem('token') },
-      beforeSend: function(xhr) {
-        console.log(`In beforeSend: ${xhr}`);
-        return;
-      },
-      success: function(data) {
-        resolve(data);
-      },
-      error: function(xhr, status, err) {
-        reject(err.toString());
-      },
-      complete: function() {
-
-      }
-    });
-  });
-}
-
+export const TEAM_IMG_URL = `http://i.cdn.turner.com/nba/nba/assets/logos/teams/primary/web`;
+export const PLAYER_IMG_URL = `https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190`;
 /*************************** ASYNC ACTIONS ***************************/
 export function signinUser({email, password}) {
   return function(dispatch) {
@@ -115,14 +90,43 @@ export function fetchPlayerDataServer(PlayerID, player) {
   }
 }
 
-/*****************************************************************************
-  SYNCHRONOUS ACTIONS
-*****************************************************************************/
+export function fetchStandingsServer() {
+  return function(dispatch) {
+    axios.get(`${ROOT_URL}/standings`, {
+      headers: { authorization: localStorage.getItem('token') }
+    })
+    .then((res) => JSON.parse(res.request.response))
+    .then((res) => {
+      return dispatch(fetchStandings(res));
+    })
+    .catch((err) => {
+      return error(err);
+    })
+  }
+}
+
 export function fetchPlayers() {
   return (dispatch) => {
       dispatch({ type: FETCH_PLAYERS, payload: nba.players });
   };
 }
+
+export function fetchTeams() {
+  return (dispatch) => {
+    dispatch({ type: FETCH_TEAMS, payload: nba.teams });
+  }
+}
+/*****************************************************************************
+  SYNCHRONOUS ACTIONS
+*****************************************************************************/
+function fetchStandings(standings) {
+  return {
+    type: FETCH_STANDINGS,
+    payload: standings
+  };
+}
+
+
 
 function error(err) {
   return {
@@ -160,7 +164,7 @@ function fetchBoxScores(boxscores, date) {
 function fetchPlayerData(res, player, PlayerID) {
   var p = player.split(' ');
   // Nba.com img's
-  var _url = `https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${PlayerID}.png`;
+  var _url = `${PLAYER_IMG_URL}/${PlayerID}.png`;
 
   return {
     type: FETCH_PLAYER,

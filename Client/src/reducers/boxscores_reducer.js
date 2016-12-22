@@ -11,16 +11,11 @@ const initState = {
 export default function(state = initState, action) {
   switch (action.type) {
     case FETCH_BOXSCORES:
-      var standings = Object.assign({}, {
-        eastStandings: action.payload.eastStandings,
-        westStandings: action.payload.westStandings
-      });
       // Split up state tree
       return Object.assign({}, {
         teams: action.payload.teams,
         gameInfo: action.payload.gameInfo,
         lastMeeting: action.payload.lastMeeting,
-        standings: standings,
         date: action.date,
         loading: false
       });

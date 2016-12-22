@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { browserHistory } from 'react-router';
-import * as actions from '../actions';
+import { fetchPlayers, fetchTeams, fetchStandingsServer } from '../actions';
 
-import PlayerTable from '../components/player_table';
+/* Redux Containers */
 import BoxScores from './boxscores';
 import Header from './header';
 import Players from './players';
+import Teams from './teams';
+/* Simple components */
 import Standings from '../components/standings';
+import PlayerTable from '../components/player_table';
 
 class Profile extends Component {
   constructor(props) {
@@ -16,6 +20,10 @@ class Profile extends Component {
   componentWillMount() {
     $(document.body).css("padding-top", "50px");
     this.props.fetchPlayers();
+  }
+  componentDidMount() {
+    this.props.fetchTeams();
+    this.props.fetchStandings();
   }
   render() {
     if (!this.props.players) return <span></span>;
@@ -42,15 +50,14 @@ class Profile extends Component {
                 <BoxScores />
               </div>
               <div role="tabpanel" className="tab-pane" id="standings">
-                <h1 className="page-header">Standings</h1>
                 <Standings standings={this.props.standings} />
               </div>
               <div role="tabpanel" className="tab-pane" id="players">
-                <Players players={this.props.players} />
+                <Players />
               </div>
               <div role="tabpanel" className="tab-pane" id="teams">
                 <h1 className="page-header">Teams</h1>
-
+                <Teams />
               </div>
               <div role="tabpanel" className="tab-pane" id="shots">
                 <h1 className="page-header">Shots</h1>
@@ -86,14 +93,21 @@ function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
     players: state.players,
-    standings: state.boxscores.standings,
-    player: state.player
+    standings: state.standings,
+    teams: state.teams
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    fetchPlayers,
+    fetchTeams,
+    fetchStandings: fetchStandingsServer
+  }, dispatch);
+}
 
 
-export default connect(mapStateToProps, actions)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 
 

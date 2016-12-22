@@ -1,6 +1,7 @@
 import React from 'react';
-
 import toAge from 'to-age';
+
+import { TEAM_IMG_URL } from '../../actions';
 
 const ProfileIntro = ({player, defaultImg}) => {
   if (!player) return <span></span>;
@@ -21,6 +22,11 @@ const ProfileIntro = ({player, defaultImg}) => {
         <ul className="list-group">
           <li className="list-group-item">
             <b>Team</b> <a className="pull-right">{ player.teamCity } { player.teamName }</a>
+            <center>
+              <img src={`${TEAM_IMG_URL}/${player.teamAbbreviation}.svg`}
+                height="90" width="90"
+              />
+            </center>
           </li>
           <li className="list-group-item">
             <b>Position</b> <a className="pull-right">{ player.position }</a>

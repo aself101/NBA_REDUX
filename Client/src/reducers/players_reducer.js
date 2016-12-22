@@ -5,7 +5,7 @@ import {
 export default function(state = [], action) {
   switch (action.type) {
     case FETCH_PLAYERS:
-      return [...state, ...action.payload];
+      return [...state, ...action.payload]
     case UNAUTH_USER:
       return [];
     default:

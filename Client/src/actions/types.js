@@ -6,7 +6,9 @@ export const SIGNIN_USER = 'SIGNIN_USER',
              FETCH_PLAYERS = 'FETCH_PLAYERS',
              FETCH_BOXSCORES = 'FETCH_BOXSCORES',
              FETCH_ERROR = 'FETCH_ERROR',
-             FETCH_PLAYER = 'FETCH_PLAYER';
+             FETCH_PLAYER = 'FETCH_PLAYER',
+             FETCH_TEAMS = 'FETCH_TEAMS',
+             FETCH_STANDINGS = 'FETCH_STANDINGS';
 
 
 
