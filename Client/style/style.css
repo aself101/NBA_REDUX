@@ -198,6 +198,21 @@ body {
   justify-content: space-between;
   padding-top: 10px;
 }
+
+.boxscores-right {
+  float: right;
+}
+
+#small-box-scores {
+  width: 150px;
+}
+
+.small-scores {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
 /**********************************************************************
 PLAYER PROFILE
 **********************************************************************/

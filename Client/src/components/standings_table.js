@@ -27,14 +27,18 @@ const StandingsTable = ({standings}) => {
       </thead>
       <tbody>
         {
-          standings.map((team) => {
+          standings.map((team, index) => {
             var isWinStreak = team.isWinStreak;
             var streak;
+            // Output ranking 1- 8
+            var rank = index + 1;
+            if (rank > 8) rank = '';
             if (isWinStreak) streak = `W${team.streak}`;
             else streak = `L${team.streak}`;
             return (
               <tr key={team.teamId}>
                 <td>
+                  <b>{ rank }</b>{"\u00a0"}
                   <img src={`${TEAM_IMG_URL}/${team.abbreviation}.svg`}
                     height="36" width="36"
                   />

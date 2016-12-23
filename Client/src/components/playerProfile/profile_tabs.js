@@ -1,5 +1,6 @@
 import React from 'react';
 
+import ProfileStats from './profile_stats';
 
 const ProfileTabs = ({ playerInfo, playerStats }) => {
   if (!playerInfo) return <span></span>;
@@ -16,7 +17,7 @@ const ProfileTabs = ({ playerInfo, playerStats }) => {
 
       <div className="tab-content">
         <div role="tabpanel" className="tab-pane active" id="playerstats">
-          Stats
+          <ProfileStats playerStats={playerStats} />
         </div>
         <div role="tabpanel" className="tab-pane" id="playervideos">
           Videos

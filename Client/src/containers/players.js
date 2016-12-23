@@ -74,7 +74,6 @@ class Players extends Component {
             </div>
             <div className="col-md-9">
               <ProfileTabs playerInfo={this.props.playerInfo} playerStats={this.props.playerStats} />
-
             </div>
           </div>
         </section>
