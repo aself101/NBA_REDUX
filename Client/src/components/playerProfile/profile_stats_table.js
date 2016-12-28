@@ -6,16 +6,22 @@ function calcPercent(pct) {
   return Math.floor(pct * 100);
 }
 
-const StatsTable = ({stats}) => {
-  var defaultImg = 'img/nba-log.png';
-  if (stats) defaultImg = `${TEAM_IMG_URL}/${stats.teamAbbreviation}.svg`;
+const StatsTable = ({stats, season}) => {
+  var defaultImg = 'img/nba-logo.png';
+  // Quick Check is this is a career display or single season
+  var career = true;
+  var _season = stats.seasonId;
+  if (!stats.seasonId) career = false;
   return (
-    <div>
+    <div id="player-stats-table">
       <div className="well">
-        <img src={defaultImg}
-          height="50" width="50"
-        />
-        <h4 className="boxscores-right">{stats.seasonId}</h4>
+        <center>
+          <h4>{season} - {career ? _season : 'Career'}</h4>
+          <img src={`${TEAM_IMG_URL}/${stats.teamAbbreviation}.svg`}
+            height="50" width="50"
+            onError={(e) => e.target.src=defaultImg}
+          />
+        </center>
       </div>
       <table className="table table-responsive table-bordered">
         <thead>

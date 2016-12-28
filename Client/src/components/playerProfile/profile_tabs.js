@@ -1,6 +1,16 @@
 import React from 'react';
 
-import ProfileStats from './profile_stats';
+import ProfileStats from '../../containers/profile_stats';
+import SeasonChart from './profile_season_chart';
+
+const colors = [
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(54, 162, 235, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)'
+];
 
 const ProfileTabs = ({ playerInfo, playerStats }) => {
   if (!playerInfo) return <span></span>;
@@ -17,7 +27,21 @@ const ProfileTabs = ({ playerInfo, playerStats }) => {
 
       <div className="tab-content">
         <div role="tabpanel" className="tab-pane active" id="playerstats">
-          <ProfileStats playerStats={playerStats} />
+          <div className="container-fluid">
+            <div className="row">
+              <ProfileStats />
+              <hr />
+              <SeasonChart playerStats={playerStats}
+                type={"bar"} id={"barChart"}
+                colors={'rgba(54, 162, 235, 0.2)'}
+              />
+              <hr />
+              <SeasonChart playerStats={playerStats} type={"line"} id={"lineChart"}
+                colors={colors}
+              />
+            </div>
+          </div>
+
         </div>
         <div role="tabpanel" className="tab-pane" id="playervideos">
           Videos

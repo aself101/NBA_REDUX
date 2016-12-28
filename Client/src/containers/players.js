@@ -73,7 +73,9 @@ class Players extends Component {
               <ProfileAbout player={this.props.playerInfo} />
             </div>
             <div className="col-md-9">
-              <ProfileTabs playerInfo={this.props.playerInfo} playerStats={this.props.playerStats} />
+              <ProfileTabs playerInfo={this.props.playerInfo}
+                playerStats={this.props.playerStats}
+              />
             </div>
           </div>
         </section>

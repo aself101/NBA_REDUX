@@ -4,7 +4,8 @@ import nba from 'nba';
 
 import {
   AUTH_USER, UNAUTH_USER, AUTH_ERROR, FETCH_MESSAGE, FETCH_PLAYERS,
-  FETCH_BOXSCORES, FETCH_ERROR, FETCH_PLAYER, FETCH_TEAMS, FETCH_STANDINGS
+  FETCH_BOXSCORES, FETCH_ERROR, FETCH_PLAYER, FETCH_TEAMS, FETCH_STANDINGS,
+  FETCH_REG_SEASON_PLAYER_STATS, FETCH_CAREER_REG_SEASON_PLAYER_STATS
 } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
@@ -119,14 +120,27 @@ export function fetchTeams() {
 /*****************************************************************************
   SYNCHRONOUS ACTIONS
 *****************************************************************************/
-function fetchStandings(standings) {
+export function fetchStandings(standings) {
   return {
     type: FETCH_STANDINGS,
     payload: standings
   };
 }
 
+export function fetchRegSeasonPlayerStats(e) {
+  //$('#player-stats-table').fadeIn();
+  return {
+    type: FETCH_REG_SEASON_PLAYER_STATS,
+    payload: e.currentTarget.id
+  };
+}
 
+export function fetchCareerRegSeasonPlayerStats() {
+  $('#player-stats-table').fadeIn();
+  return {
+    type: FETCH_CAREER_REG_SEASON_PLAYER_STATS
+  };
+}
 
 function error(err) {
   return {

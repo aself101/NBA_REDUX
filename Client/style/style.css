@@ -206,7 +206,14 @@ body {
 #small-box-scores {
   width: 150px;
 }
+#player-stats-table {
+  display: block;
+}
 
+.player-season-stats:hover {
+  background-color: #D3D3D3;
+  color: #000000;
+}
 .small-scores {
   display: flex;
   flex-wrap: wrap;

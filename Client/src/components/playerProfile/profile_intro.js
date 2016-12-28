@@ -14,7 +14,6 @@ const ProfileIntro = ({player, defaultImg}) => {
           id="player-pic"
           src={player.img}
           onError={(e) => e.target.src=defaultImg }
-          data-action="zoom"
         />
         <h3 className="profile-username text-center">{ player.displayFirstLast }</h3>
         <p className="text-muted text-center"></p>
