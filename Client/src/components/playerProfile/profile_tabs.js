@@ -13,7 +13,7 @@ const colors = [
 ];
 
 const ProfileTabs = ({ playerInfo, playerStats }) => {
-  if (!playerInfo) return <span></span>;
+  if (!playerInfo && !playerStats) return <span></span>;
 
   return (
     <div role="navigation">
@@ -32,12 +32,12 @@ const ProfileTabs = ({ playerInfo, playerStats }) => {
               <ProfileStats />
               <hr />
               <SeasonChart playerStats={playerStats}
-                type={"bar"} id={"barChart"}
+                type={"bar"} id={`barChart`}
                 colors={'rgba(54, 162, 235, 0.2)'}
               />
               <hr />
-              <SeasonChart playerStats={playerStats} type={"line"} id={"lineChart"}
-                colors={colors}
+              <SeasonChart playerStats={playerStats} type={"line"} id={'lineChart'}
+                colors={'rgba(255, 99, 132, 0.2)'}
               />
             </div>
           </div>
