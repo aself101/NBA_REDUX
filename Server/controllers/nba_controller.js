@@ -1,5 +1,8 @@
 const nba = require('nba');
 const _nba = require('nba.js').default;
+const level = require('level');
+const playersDB = level('./playersDB');
+
 
 const conferenceEast = {
   'ATL': 'ATL',
@@ -107,6 +110,34 @@ function processStandings(stats) {
   return state;
 }
 
+/*
+  Global Players Object
+  After a res is sent, pull all players and cache serverside, so when a new req
+  occurs, a new player can be served rapidly fast
+  Going to use leveldb and cache nba players
+*/
+function getAllPlayers() {
+  // Get all players and their IDs
+  var players = nba.players;
+  // Loop through all players and pull playerInfo and playerProfile
+  for (let key of players) {
+    var playerInfo = nba.stats.playerInfo({ PlayerID: key.playerId });
+    var playerProfile = nba.stats.playerProfile({ PlayerID: key.playerId });
+
+    Promise.all([playerProfile, playerInfo])
+      .then((stats) => {
+        playersDB.put(key.playerId, JSON.stringify(stats), (err) => {
+          if (err) return console.log(err);
+        });
+      })
+      .catch((err) => {
+        return next(err);
+      });
+  }
+  // Insert into leveldb
+}
+
+
 /*******************************************************************************
   All Routes
 *******************************************************************************/
@@ -123,17 +154,27 @@ exports.boxscores = (req, res, next) => {
 
 exports.player = (req, res, next) => {
   const PlayerID = req.query.PlayerID;
-  const playerInfo = nba.stats.playerInfo({ PlayerID: PlayerID });
-  const playerProfile = nba.stats.playerProfile({ PlayerID: PlayerID });
+  // try and first pull a player from leveldb
+  playersDB.get(PlayerID, (err, stats) => {
+    if (err) console.log(err);
 
-  Promise.all([playerProfile, playerInfo])
-    .then((stats) => {
-      res.json({ playerStats: stats })
-    })
-    .catch((err) => {
-      return next(err);
-    });
-  }
+    if (!stats) {
+      const playerInfo = nba.stats.playerInfo({ PlayerID: PlayerID });
+      const playerProfile = nba.stats.playerProfile({ PlayerID: PlayerID });
+
+      Promise.all([playerProfile, playerInfo])
+        .then((stats) => {
+          res.json({ playerStats: stats })
+        })
+        .catch((err) => {
+          return next(err);
+        });
+        // If no player, pull and create db
+        getAllPlayers();
+    }
+    res.json({ playerStats: JSON.parse(stats) })
+  });
+}
 
 exports.standings = (req, res, next) => {
   _nba.data.standings()

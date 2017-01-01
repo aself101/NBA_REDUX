@@ -2,6 +2,7 @@ import React from 'react';
 
 import ProfileStats from '../../containers/profile_stats';
 import SeasonChart from './profile_season_chart';
+import { mapPts, mapReb, mapAst } from './charts/chart_helpers';
 
 const colors = [
     'rgba(255, 99, 132, 0.2)',
@@ -11,6 +12,8 @@ const colors = [
     'rgba(153, 102, 255, 0.2)',
     'rgba(255, 159, 64, 0.2)'
 ];
+
+
 
 const ProfileTabs = ({ playerInfo, playerStats }) => {
   if (!playerInfo && !playerStats) return <span></span>;
@@ -31,13 +34,22 @@ const ProfileTabs = ({ playerInfo, playerStats }) => {
             <div className="row">
               <ProfileStats />
               <hr />
-              <SeasonChart playerStats={playerStats}
-                type={"bar"} id={`barChart`}
+              <SeasonChart playerStats={playerStats} stat={mapPts}
+                type={"bar"} id={`ptsBarChart`}
                 colors={'rgba(54, 162, 235, 0.2)'}
+                label={'Regular Season Points'}
               />
               <hr />
-              <SeasonChart playerStats={playerStats} type={"line"} id={'lineChart'}
+              <SeasonChart playerStats={playerStats} stat={mapReb}
+                type={"line"} id={'rebLineChart'}
                 colors={'rgba(255, 99, 132, 0.2)'}
+                label={'Regular Season Rebounds'}
+              />
+              <hr />
+              <SeasonChart playerStats={playerStats} stat={mapAst}
+                type={"line"} id={'astLineChart'}
+                colors={'rgba(75, 192, 192, 0.2)'}
+                label={'Regular Season Assists'}
               />
             </div>
           </div>
