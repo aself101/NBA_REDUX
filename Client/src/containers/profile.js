@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { browserHistory } from 'react-router';
-import { fetchPlayers, fetchTeams, fetchStandingsServer } from '../actions';
 
+/* Redux Actions */
+import { fetchPlayers, fetchTeams, fetchStandingsServer,
+  fetchTankathonServer } from '../actions';
 /* Redux Containers */
 import BoxScores from './boxscores';
 import Header from './header';
@@ -12,6 +14,7 @@ import Teams from './teams';
 /* Simple components */
 import Standings from '../components/standings';
 import PlayerTable from '../components/player_table';
+import TankathonTable from '../components/tankathon_table';
 
 class Profile extends Component {
   constructor(props) {
@@ -24,6 +27,7 @@ class Profile extends Component {
   componentDidMount() {
     this.props.fetchTeams();
     this.props.fetchStandings();
+    this.props.fetchTankathon();
   }
   render() {
     if (!this.props.players) return <span></span>;
@@ -37,6 +41,7 @@ class Profile extends Component {
               <ul className="nav nav-sidebar">
                 <li role="presentation" className="active"><a href="#boxscores" aria-controls="boxscores" role="tab" data-toggle="tab">Box Scores</a></li>
                 <li role="presentation"><a href="#standings" aria-controls="standings" role="tab" data-toggle="tab">Standings</a></li>
+                <li role="presentation"><a href="#tankathon" aria-controls="tankathon" role="tab" data-toggle="tab">Tankathon</a></li>
                 <li role="presentation"><a href="#players" aria-controls="players" role="tab" data-toggle="tab">Players</a></li>
                 <li role="presentation"><a href="#teams" aria-controls="teams" role="tab" data-toggle="tab">Teams</a></li>
                 <li role="presentation"><a href="#shots" aria-controls="shots" role="tab" data-toggle="tab">Shots</a></li>
@@ -51,6 +56,10 @@ class Profile extends Component {
               </div>
               <div role="tabpanel" className="tab-pane" id="standings">
                 <Standings standings={this.props.standings} />
+              </div>
+              <div role="tabpanel" className="tab-pane" id="tankathon">
+                <h1 className="page-header">Tankathon</h1>
+                <TankathonTable standings={this.props.tankathon} />
               </div>
               <div role="tabpanel" className="tab-pane" id="players">
                 <Players />
@@ -93,8 +102,9 @@ function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
     players: state.players,
-    standings: state.standings,
-    teams: state.teams
+    standings: state.standings.standings,
+    teams: state.teams,
+    tankathon: state.standings.tankathon
   };
 }
 
@@ -102,7 +112,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchPlayers,
     fetchTeams,
-    fetchStandings: fetchStandingsServer
+    fetchStandings: fetchStandingsServer,
+    fetchTankathon: fetchTankathonServer
   }, dispatch);
 }
 

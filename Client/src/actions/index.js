@@ -5,7 +5,8 @@ import nba from 'nba';
 import {
   AUTH_USER, UNAUTH_USER, AUTH_ERROR, FETCH_MESSAGE, FETCH_PLAYERS,
   FETCH_BOXSCORES, FETCH_ERROR, FETCH_PLAYER, FETCH_TEAMS, FETCH_STANDINGS,
-  FETCH_REG_SEASON_PLAYER_STATS, FETCH_CAREER_REG_SEASON_PLAYER_STATS
+  FETCH_REG_SEASON_PLAYER_STATS, FETCH_CAREER_REG_SEASON_PLAYER_STATS,
+  FETCH_TANKATHON
 } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
@@ -101,8 +102,19 @@ export function fetchStandingsServer() {
       return dispatch(fetchStandings(res));
     })
     .catch((err) => {
-      return error(err);
+      return dispatch(error(err));
     })
+  }
+}
+
+export function fetchTankathonServer() {
+  return function(dispatch) {
+    axios.get(`${ROOT_URL}/tankathon`, {
+      headers: { authorization: localStorage.getItem('token') }
+    })
+    .then((res) => JSON.parse(res.request.response))
+    .then((res) => dispatch(fetchTankathon(res)))
+    .catch((err) => dispatch(error(err)));
   }
 }
 
@@ -140,6 +152,13 @@ export function fetchCareerRegSeasonPlayerStats() {
   return {
     type: FETCH_CAREER_REG_SEASON_PLAYER_STATS
   };
+}
+
+export function fetchTankathon(standings) {
+  return {
+    type: FETCH_TANKATHON,
+    payload: standings
+  }
 }
 
 function error(err) {

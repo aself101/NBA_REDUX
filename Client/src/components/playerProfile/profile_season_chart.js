@@ -45,7 +45,8 @@ export default class SeasonChart extends Component {
                   }
               }]
           },
-          responsive: true
+          responsive: true,
+          maintainAspectRatio: true
       }
     });
     this.setState({curChart: myChart});
@@ -53,7 +54,7 @@ export default class SeasonChart extends Component {
   render() {
     return (
       <div>
-        <canvas id={this.props.id} width={this.state.width} height={this.state.height}></canvas>
+        <canvas className={"all-charts"} id={this.props.id} width={this.state.width} height={this.state.height}></canvas>
       </div>
     );
   }

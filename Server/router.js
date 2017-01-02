@@ -2,7 +2,7 @@
   All Routes
 */
 const Authentication = require('./controllers/authentication');
-const { boxscores, player, standings } = require('./controllers/nba_controller');
+const { boxscores, player, standings, tankathon } = require('./controllers/nba_controller');
 const passportService = require('./services/passport');
 
 const passport = require('passport');
@@ -19,7 +19,7 @@ module.exports = (app) => {
   app.get('/boxscores', requireAuth, boxscores);
   app.get('/player', requireAuth, player);
   app.get('/standings', requireAuth, standings);
-
+  app.get('/tankathon', requireAuth, tankathon);
   /* POSTS */
   app.post('/signin', requireSignin, Authentication.signin);
   app.post('/signup', Authentication.signup);

@@ -170,7 +170,10 @@ body {
   .box-headline {
     font-size: 25px;
   }
-
+  .all-charts {
+    width: 200;
+    height: 100;
+  }
 }
 
 .headline {
@@ -201,6 +204,11 @@ body {
 
 .boxscores-right {
   float: right;
+}
+
+.all-charts {
+  width: 200;
+  height: 20;
 }
 
 #small-box-scores {
