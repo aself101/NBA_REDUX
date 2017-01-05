@@ -1,4 +1,9 @@
 
+/*
+  Called in tankathon_table.js
+  Split and parse the information as delivered
+*/
+
 
 
 

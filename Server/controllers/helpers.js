@@ -99,7 +99,6 @@ module.exports.processScoreBoard = function(stats) {
       );
     }
   }
-
   // Make sure the network request pulls all line up properly
   // There was an issue where the lineScores were not lining up with the lastMeetings
   for (i = 0; i < state.teams.length; i++) {
@@ -133,6 +132,11 @@ module.exports.getTankathon = function() {
     body: body
   };
 }
+/*
+  Cleans up the tankathon array and places
+  each team in its own obj, which can then be
+  easily iterated through for table display
+*/
 
 module.exports.cleanUpTankathon = function(vals) {
   var tankathonArray = [];
