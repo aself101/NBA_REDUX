@@ -4,7 +4,8 @@ const level = require('level');
 
 const playersDB = level('./playersDB');
 const { processStandings, processScoreBoard,
-  cleanUpTankathon, getTankathon, getAllPlayers} = require('./helpers');
+  cleanUpTankathon, getTankathon, getAllPlayers,
+  parseBoxScoreStats } = require('./helpers');
 
 
 
@@ -18,7 +19,18 @@ exports.boxscores = (req, res, next) => {
       res.json({stats: processScoreBoard(stats)});
     })
     .catch((err) => {
-      return next(err);
+      return next(err, null);
+    });
+}
+
+exports.boxscoresInfo = (req, res, next) => {
+  const GameID = req.query.GameID;
+  nba.stats.boxScore({ GameID: GameID })
+    .then((stats) => {
+      res.json({ boxScoreStats: parseBoxScoreStats(stats)});
+    })
+    .catch((err) => {
+      return next(err, null);
     });
 }
 
@@ -37,7 +49,7 @@ exports.player = (req, res, next) => {
           res.json({ playerStats: stats })
         })
         .catch((err) => {
-          return next(err);
+          return next(err, null);
         });
         // If no player, pull and create db
         getAllPlayers();
@@ -52,7 +64,7 @@ exports.standings = (req, res, next) => {
       res.json({ standings: processStandings(stats) });
     })
     .catch((err) => {
-      return next(err);
+      return next(err, null);
     });
 }
 
@@ -62,7 +74,7 @@ exports.tankathon = (req, res, next) => {
     res.json({ tankathon: cleanUpTankathon(standings)});
   })
   .catch((err) => {
-    return next(err);
+    return next(err, null);
   })
 }
 

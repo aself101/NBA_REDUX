@@ -42,38 +42,7 @@ const conferenceWest = {
   'UTA': 'UTA'
 };
 
-// Clean up standings
-module.exports.processStandings = function(stats) {
-  const standings = stats.league.standard.teams;
-  const teams = nba.teams;
-  var state = {
-    east: [],
-    west: []
-  };
-  let i, j;
-  let sLength = standings.length;
-  let tLength = teams.length;
 
-  for (i = 0; i < sLength; i++) {
-    for (j = 0; j < tLength; j++) {
-      if ((standings[i].teamId === teams[j].teamId.toString()) && (conferenceEast[teams[j].abbreviation] === teams[j].abbreviation)) {
-        state.east.push(Object.assign({}, standings[i], {
-          abbreviation: teams[j].abbreviation,
-          teamName: teams[j].teamName,
-          location: teams[j].location
-        }));
-      } else if ((standings[i].teamId === teams[j].teamId.toString()) && (conferenceWest[teams[j].abbreviation] === teams[j].abbreviation)) {
-        state.west.push(Object.assign({}, standings[i], {
-          abbreviation: teams[j].abbreviation,
-          teamName: teams[j].teamName,
-          location: teams[j].location
-        }));
-      }
-    }
-  }
-
-  return state;
-}
 
 /*******************************************************************************
 Clean up of initial data pull
@@ -112,6 +81,38 @@ module.exports.processScoreBoard = function(stats) {
   return state;
 }
 
+// Clean up standings
+module.exports.processStandings = function(stats) {
+  const standings = stats.league.standard.teams;
+  const teams = nba.teams;
+  var state = {
+    east: [],
+    west: []
+  };
+  let i, j;
+  let sLength = standings.length;
+  let tLength = teams.length;
+
+  for (i = 0; i < sLength; i++) {
+    for (j = 0; j < tLength; j++) {
+      if ((standings[i].teamId === teams[j].teamId.toString()) && (conferenceEast[teams[j].abbreviation] === teams[j].abbreviation)) {
+        state.east.push(Object.assign({}, standings[i], {
+          abbreviation: teams[j].abbreviation,
+          teamName: teams[j].teamName,
+          location: teams[j].location
+        }));
+      } else if ((standings[i].teamId === teams[j].teamId.toString()) && (conferenceWest[teams[j].abbreviation] === teams[j].abbreviation)) {
+        state.west.push(Object.assign({}, standings[i], {
+          abbreviation: teams[j].abbreviation,
+          teamName: teams[j].teamName,
+          location: teams[j].location
+        }));
+      }
+    }
+  }
+
+  return state;
+}
 // Main function to pull all values
 module.exports.getTankathon = function() {
   // Table records
@@ -127,7 +128,7 @@ module.exports.getTankathon = function() {
         resolve(tableRecords);
       });
   });
-
+  // Create closure
   return {
     body: body
   };
@@ -193,7 +194,58 @@ module.exports.getAllPlayers = function() {
   }
   // Insert into leveldb
 }
+// Clean up boxscore team and player stats
+module.exports.parseBoxScoreStats = function(stats) {
+  const playerTeamStats = stats.resultSets;
+  // Main state obj to be returned
+  var boxScoreObj = {
+    playerHeaders: {},
+    players: [],
+    teamHeaders: {},
+    teams: []
+  };
 
+  var playerStatsHeaders = {}, teamStatsHeaders = {};
+  var playerStatObj = {}, teamStatObj = {};
+  var playerStatArr = [], teamStatArr = [];
+  // Players - stats, headers
+  var playerGameHeaders = playerTeamStats[0].headers;
+  var playerGameStats = playerTeamStats[0].rowSet;
+  // Teams - stats, headers
+  var teamGameHeaders = playerTeamStats[1].headers;
+  var teamGameStats = playerTeamStats[1].rowSet;
+
+  // Headers obj for team/player table headers
+  for (let item of playerGameHeaders) playerStatsHeaders[item] = item;
+  for (let item of teamGameHeaders) teamStatsHeaders[item] = item;
+
+  // Place each player in an obj with headers: stats structure
+  // for ease of table display
+  for (let player of playerGameStats) {
+    for (let key in player) {
+      if (player[key] === null) player[key] = '';
+      playerStatObj[playerGameHeaders[key]] = player[key];
+    }
+    playerStatArr.push(playerStatObj);
+    playerStatObj = {};
+  }
+  // Get Teams in array of obj
+  for (let team of teamGameStats) {
+    for (let key in team) {
+      teamStatObj[teamGameHeaders[key]] = team[key];
+    }
+    teamStatArr.push(teamStatObj);
+    teamStatObj = {};
+  }
+
+
+  boxScoreObj.players = playerStatArr;
+  boxScoreObj.playerHeaders = playerStatsHeaders;
+  boxScoreObj.teams = teamStatArr;
+  boxScoreObj.teamHeaders = teamStatsHeaders;
+
+  return boxScoreObj;
+}
 
 
 

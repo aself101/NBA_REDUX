@@ -6,7 +6,7 @@ import {
   AUTH_USER, UNAUTH_USER, AUTH_ERROR, FETCH_MESSAGE, FETCH_PLAYERS,
   FETCH_BOXSCORES, FETCH_ERROR, FETCH_PLAYER, FETCH_TEAMS, FETCH_STANDINGS,
   FETCH_REG_SEASON_PLAYER_STATS, FETCH_CAREER_REG_SEASON_PLAYER_STATS,
-  FETCH_TANKATHON
+  FETCH_TANKATHON, FETCH_BOXSCORE_TEAM_PLAYER_INFO
 } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
@@ -44,7 +44,7 @@ export function signupUser({email, password}) {
       });
   }
 }
-// Fetches data from server
+// Fetches basic boxscore data from server
 export function fetchBoxScoresServer(date) {
   $('.scores').fadeOut();
   $('.loading').css('display','inline');
@@ -68,7 +68,21 @@ export function fetchBoxScoresServer(date) {
     });
   }
 }
-
+// Fetches more boxscore information from server
+export function fetchBoxScoresTeamPlayerInfoServer(GameID) {
+  return function(dispatch) {
+    axios.get(`${ROOT_URL}/boxscoresInfo`, {
+      params: {
+        GameID: GameID
+      },
+      headers: { authorization: localStorage.getItem('token') }
+    })
+    .then((response) => JSON.parse(response.request.response))
+    .then((response) => dispatch(fetchBoxScoresTeamPlayerInfo(response)))
+    .catch((err) => dispatch(error(err)));
+  };
+}
+// Fetches player data for player profile
 export function fetchPlayerDataServer(PlayerID, player) {
   // Split name: Lastname/firstname for headshot in profile
   $('#player-profile').fadeOut();
@@ -191,6 +205,13 @@ function fetchBoxScores(boxscores, date) {
     type: FETCH_BOXSCORES,
     payload: b,
     date: date
+  }
+}
+
+function fetchBoxScoresTeamPlayerInfo(stats) {
+  return {
+    type: FETCH_BOXSCORE_TEAM_PLAYER_INFO,
+    payload: stats
   }
 }
 
