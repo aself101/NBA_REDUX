@@ -200,7 +200,10 @@ module.exports.parseBoxScoreStats = function(stats) {
   // Main state obj to be returned
   var boxScoreObj = {
     playerHeaders: {},
-    players: [],
+    players: {
+      team1: [],
+      team2: []
+    },
     teamHeaders: {},
     teams: []
   };
@@ -208,6 +211,7 @@ module.exports.parseBoxScoreStats = function(stats) {
   var playerStatsHeaders = {}, teamStatsHeaders = {};
   var playerStatObj = {}, teamStatObj = {};
   var playerStatArr = [], teamStatArr = [];
+  var playersT1 = [], playersT2 = [];
   // Players - stats, headers
   var playerGameHeaders = playerTeamStats[0].headers;
   var playerGameStats = playerTeamStats[0].rowSet;
@@ -237,9 +241,19 @@ module.exports.parseBoxScoreStats = function(stats) {
     teamStatArr.push(teamStatObj);
     teamStatObj = {};
   }
+  // Split players into individual teams
+  let teamAbbr = playerStatArr[0].TEAM_ABBREVIATION;
+  for (let i = 0; i < playerStatArr.length; i++) {
+    if (playerStatArr[i].TEAM_ABBREVIATION === teamAbbr) playersT1.push(playerStatArr[i]);
+    else playersT2.push(playerStatArr[i]);
+  }
 
+  // TODO: Remove headers after modals are up
 
-  boxScoreObj.players = playerStatArr;
+  boxScoreObj.players = {
+    team1: playersT1,
+    team2: playersT2
+  };
   boxScoreObj.playerHeaders = playerStatsHeaders;
   boxScoreObj.teams = teamStatArr;
   boxScoreObj.teamHeaders = teamStatsHeaders;
