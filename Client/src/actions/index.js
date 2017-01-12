@@ -70,6 +70,7 @@ export function fetchBoxScoresServer(date) {
 }
 // Fetches more boxscore information from server
 export function fetchBoxScoresTeamPlayerInfoServer(GameID) {
+  $('.boxscore-player-table').fadeOut();
   return function(dispatch) {
     axios.get(`${ROOT_URL}/boxscoresInfo`, {
       params: {
@@ -78,7 +79,10 @@ export function fetchBoxScoresTeamPlayerInfoServer(GameID) {
       headers: { authorization: localStorage.getItem('token') }
     })
     .then((response) => JSON.parse(response.request.response))
-    .then((response) => dispatch(fetchBoxScoresTeamPlayerInfo(response)))
+    .then((response) => {
+      $('.boxscore-player-table').fadeIn();
+      dispatch(fetchBoxScoresTeamPlayerInfo(response));
+    })
     .catch((err) => dispatch(error(err)));
   };
 }

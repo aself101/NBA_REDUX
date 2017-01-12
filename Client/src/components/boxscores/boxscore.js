@@ -25,17 +25,17 @@ const Boxscore = ({team1, team2, gameInfo, lastMeeting}) => {
 
                   <div className="boxscore-team-img">
                     <img className="img-responsive"
-                      src={`${TEAM_IMG_URL}/${team2.teamAbbreviation}.svg`}
+                      src={`${TEAM_IMG_URL}/${team1.teamAbbreviation}.svg`}
                       height="45" width="45"
                     />
                   </div>
-                  <p className="help-block">{team2.teamWinsLosses}</p>
+                  <p className="help-block">{team1.teamWinsLosses}</p>
                   <span className="boxscore-team-flex">
-                    <b>{team2.teamAbbreviation}</b>
+                    <b>{team1.teamAbbreviation}</b>
 
                   </span>
                   <span className="boxscore-team-name">
-                    <h3 className="panel-title"> <span id={team2ID}><b>{team2.pts}</b></span></h3>
+                    <h3 className="panel-title"> <span id={team1ID}><b>{team1.pts}</b></span></h3>
                   </span>
                 </div>
                 <div>
@@ -47,17 +47,17 @@ const Boxscore = ({team1, team2, gameInfo, lastMeeting}) => {
 
                   <div className="boxscore-team-img">
                     <img className="img-responsive"
-                      src={`${TEAM_IMG_URL}/${team1.teamAbbreviation}.svg`}
+                      src={`${TEAM_IMG_URL}/${team2.teamAbbreviation}.svg`}
                       height="45" width="45"
                     />
                   </div>
-                  <p className="help-block">{team1.teamWinsLosses}</p>
+                  <p className="help-block">{team2.teamWinsLosses}</p>
                   <span className="boxscore-team-flex">
-                    <b>{team1.teamAbbreviation}</b>
+                    <b>{team2.teamAbbreviation}</b>
 
                   </span>
                   <span className="boxscore-team-name">
-                    <h3 className="panel-title"><span id={team1ID}><b>{team1.pts}</b></span></h3>
+                    <h3 className="panel-title"><span id={team2ID}><b>{team2.pts}</b></span></h3>
                   </span>
                 </div>
               </div>
@@ -74,12 +74,12 @@ const Boxscore = ({team1, team2, gameInfo, lastMeeting}) => {
             <div className="row">
               <div className="col-sm-6">
                 <div className="scores">
-                  <TeamStats team={team2} />
+                  <TeamStats team={team1} />
                 </div>
               </div>
               <div className="col-sm-6">
                 <div className="scores">
-                  <TeamStats team={team1} />
+                  <TeamStats team={team2} />
                 </div>
               </div>
             </div>

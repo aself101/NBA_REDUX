@@ -2,7 +2,7 @@ import React from 'react';
 
 const PlayerTable = ({players}) => {
   return (
-    <div className="no-more-tables">
+    <div className="boxscore-player-table">
       <table className="table table-responsive table-bordered table-hover table-condensed">
         <thead>
           <tr>
@@ -26,10 +26,15 @@ const PlayerTable = ({players}) => {
         <tbody>
           {
             players.map((player) => {
+              // Make sure +/- is displayed
+              var plus_minus;
+              if (Number.isInteger(player.PLUS_MINUS) && player.PLUS_MINUS > 0) {
+                plus_minus = `+${player.PLUS_MINUS}`;
+              } else plus_minus = `${player.PLUS_MINUS}`;
               return (
                 <tr key={player.PLAYER_ID}>
                   <td>
-                    {player.PLAYER_NAME} <span className="help-block">{player.START_POSITION}</span>
+                    <span>{player.PLAYER_NAME} <b className="pull-right">{player.START_POSITION}</b></span>
                   </td>
                   <td>{player.MIN}</td>
                   <td>{player.FGM}-{player.FGA}</td>
@@ -44,7 +49,7 @@ const PlayerTable = ({players}) => {
                   <td>{player.TO}</td>
                   <td>{player.PF}</td>
                   <td>{player.PTS}</td>
-                  <td>{player.PLUS_MINUS}</td>
+                  <td>{plus_minus}</td>
                 </tr>
               )
             })

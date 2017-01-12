@@ -3,8 +3,9 @@ import PlayerTable from './modal_team_player_table';
 import { TEAM_IMG_URL } from '../../../actions';
 
 const ModalBody = ({team1, team2, gameStats}) => {
-  var t1Players, t2Players, t1Img, t2Img, t1ID = 'team1', t2ID = 'team2';
+  var t1Players, t2Players, t1Img, t2Img, t1ID, t2ID;
   if (!gameStats.players) {
+    // Catch early errors where no data is available
     t1Players = [];
     t2Players = [];
     t1Img = 'img/nba-logo.png';
