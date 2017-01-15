@@ -8,7 +8,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
-
+const helmet = require('helmet');
 const router = require('./router');
 
 
@@ -19,6 +19,7 @@ const router = require('./router');
 const app = express();
 app.use(morgan('combined'));
 app.use(cors());
+app.use(helmet());
 app.use(bodyParser.json({type: '*/*'}));
 router(app);
 
