@@ -254,7 +254,6 @@ module.exports.parseBoxScoreStats = function(stats) {
     team1: playersT1,
     team2: playersT2
   };
-  boxScoreObj.playerHeaders = playerStatsHeaders;
   boxScoreObj.teams = teamStatArr;
   boxScoreObj.teamHeaders = teamStatsHeaders;
 

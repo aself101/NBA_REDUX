@@ -29,9 +29,9 @@ const SmallBoxScore = ({team1, team2, gameInfo, fetchBoxScoresTPInfo}) => {
       </div>
       <div className="row">
         <div className="col-sm-12">
-          <img src={`${TEAM_IMG_URL}/${team1.teamAbbreviation}.svg`} height="25" width="25" />
+          <img src={`${TEAM_IMG_URL}/${team1.teamAbbreviation}.svg`} height="25" width="25" />{team1.teamAbbreviation}
             <span className="boxscores-right">{ t1Pts ? t1Pts : t1WinsLosses }</span><br />
-          <img src={`${TEAM_IMG_URL}/${team2.teamAbbreviation}.svg`} height="25" width="25" />
+          <img src={`${TEAM_IMG_URL}/${team2.teamAbbreviation}.svg`} height="25" width="25" />{team2.teamAbbreviation}
             <span className="boxscores-right">{ t2Pts ? t2Pts : t2WinsLosses }</span>
         </div>
       </div>

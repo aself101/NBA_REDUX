@@ -7,6 +7,7 @@ export default function playerReducer(state = {}, action) {
     case FETCH_PLAYER:
       const img = action.img;
       const playerStats = action.payload.playerStats[0];
+      const playerShots = action.payload.playerShots;
       const regSeasonLen = playerStats.seasonTotalsRegularSeason.length;
       //console.log('Seasons played: ' + regSeasonLen);
       const playerInfo = Object.assign({}, action.payload.playerStats[1].commonPlayerInfo[0], {
@@ -16,6 +17,7 @@ export default function playerReducer(state = {}, action) {
       return Object.assign({}, state, {
         playerStats,
         playerInfo,
+        playerShots,
         regSeasonSelected: playerStats.seasonTotalsRegularSeason[regSeasonLen - 1],
         postSeasonSelected: {},
         preSeasonSelected: {}

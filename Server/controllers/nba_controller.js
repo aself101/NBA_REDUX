@@ -3,6 +3,10 @@ const _nba = require('nba.js').default;
 const level = require('level');
 
 const playersDB = level('./playersDB');
+const playerShotsDB = level('./playerShotsDB');
+const teamsDB = level('./teamsDB');
+
+
 const { processStandings, processScoreBoard,
   cleanUpTankathon, getTankathon, getAllPlayers,
   parseBoxScoreStats } = require('./helpers');
@@ -38,25 +42,19 @@ exports.player = (req, res, next) => {
   const PlayerID = req.query.PlayerID;
   // try and first pull a player from leveldb
   playersDB.get(PlayerID, (err, stats) => {
-    if (err) console.log(err);
+    if (err) return next(err, null);
 
-    if (!stats) {
-      const playerInfo = nba.stats.playerInfo({ PlayerID: PlayerID });
-      const playerProfile = nba.stats.playerProfile({ PlayerID: PlayerID });
-
-      Promise.all([playerProfile, playerInfo])
-        .then((stats) => {
-          res.json({ playerStats: stats })
-        })
-        .catch((err) => {
-          return next(err, null);
-        });
-        // If no player, pull and create db
-        getAllPlayers();
-    }
-    res.json({ playerStats: JSON.parse(stats) })
+    playerShotsDB.get(PlayerID, (err, shots) => {
+      if (err) return next(err, null);
+      res.json({
+        playerStats: JSON.parse(stats),
+        playerShots: JSON.parse(shots)
+      });
+    })
+    //res.json({ playerStats: JSON.parse(stats) })
   });
 }
+
 
 exports.standings = (req, res, next) => {
   _nba.data.standings()
@@ -78,6 +76,15 @@ exports.tankathon = (req, res, next) => {
   })
 }
 
+exports.team = (req, res, next) => {
+  const teamId = req.query.TeamID;
+
+  teamsDB.get(teamId, (err, stats) => {
+    if (err) return next(err, null);
+
+    res.json({ teamStats: JSON.parse(stats) });
+  });
+}
 
 
 
