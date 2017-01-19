@@ -20,7 +20,7 @@ const ProfileTabs = ({ playerInfo, playerStats }) => {
 
   return (
     <div role="navigation">
-      <ul className="nav nav-pills">
+      <ul className="nav nav-pills nav-justified">
         <li role="presentation" className="active"><a href="#playerstats" role="tab" data-toggle="tab">Stats</a></li>
         <li role="presentation"><a href="#playervideos" role="tab" data-toggle="tab">Videos</a></li>
         <li role="presentation"><a href="#playernews" role="tab" data-toggle="tab">News</a></li>

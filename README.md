@@ -17,23 +17,23 @@ Redux
 React-router
 ```
 #### Back-end
-```
-ExpressJS
-MySQL
+- ExpressJS
+- MySQL
+- LevelDB
+- Authentication with: Passport & JSON-Web Tokens
 
-Authentication with: Passport & JSON-Web Tokens
-```
 
 ## Dependencies
 ##### MySQL
 ##### Node JS
 
 ## Server
-Create an auth database and import the sql file
-
+##### Create an auth database and import the sql file
+##### Run the nba-chron script to populate leveldb instances
 ```
 mysql -u [username] -p auth < auth.sql
 yarn install
+node nba-chron.js
 npm run dev
 ```
 ## Client
@@ -41,5 +41,6 @@ npm run dev
 yarn install
 npm start
 ```
+
 
 ## Create a user account to access NBA dashboard profile
