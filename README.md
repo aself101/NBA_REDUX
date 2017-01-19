@@ -11,11 +11,11 @@
 
 ### Stack
 #### Front-end
-```
-ReactJS
-Redux
-React-router
-```
+
+- ReactJS
+- Redux
+- React-router
+
 #### Back-end
 - ExpressJS
 - MySQL
