@@ -1,6 +1,5 @@
 # NBA Redux
 
-### Alexander Self
 #### Personal project pulling NBA stats and data.
 
 ##### Includes boxscores from any date
