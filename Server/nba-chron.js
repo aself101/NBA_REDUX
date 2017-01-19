@@ -44,7 +44,7 @@ const conferenceWest = {
   'UTA': 'UTA'
 };
 
-/* Get all shots from players */
+/* Get all shots from all players */
 function getPlayerShots() {
 
   var players = nba.players;
@@ -182,10 +182,10 @@ function parseBoxScoreStats(stats) {
   var playerStatObj = {}, teamStatObj = {};
   var playerStatArr = [], teamStatArr = [];
   var playersT1 = [], playersT2 = [];
-  // Players - stats, headers
+
   var playerGameHeaders = playerTeamStats[0].headers;
   var playerGameStats = playerTeamStats[0].rowSet;
-  // Teams - stats, headers
+
   var teamGameHeaders = playerTeamStats[1].headers;
   var teamGameStats = playerTeamStats[1].rowSet;
 
@@ -203,7 +203,7 @@ function parseBoxScoreStats(stats) {
     playerStatArr.push(playerStatObj);
     playerStatObj = {};
   }
-  // Get Teams in array of obj
+
   for (let team of teamGameStats) {
     for (let key in team) {
       teamStatObj[teamGameHeaders[key]] = team[key];
