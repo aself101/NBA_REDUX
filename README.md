@@ -2,13 +2,13 @@
 
 ### Alexander Self
 #### Personal project pulling NBA stats and data.
-```
-Includes boxscores from any date
-Current standings
-Current tankathon
-Player profiles
-Team listing
-```
+
+##### Includes boxscores from any date
+##### Current standings
+##### Current tankathon
+##### Player profiles
+##### Team listing
+
 
 ### Stack
 #### Front-end
@@ -26,14 +26,14 @@ Authentication with: Passport & JSON-Web Tokens
 ```
 
 ## Dependencies
-MySQL
-Node JS
+##### MySQL
+##### Node JS
 
 ## Server
 Create an auth database and import the sql file
-mysql -u [username] -p auth < auth.sql
 
 ```
+mysql -u [username] -p auth < auth.sql
 yarn install
 npm run dev
 ```
