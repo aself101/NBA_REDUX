@@ -171,8 +171,8 @@ function getArrayOfDates(dateFrom, dateTo) {
 
 function getAllGamesInfo() {
   var today = moment().format('MM-DD-YYYY');
-  var dates = getArrayOfDates('10-25-2010', '10-25-2015');
-
+  var dates = getArrayOfDates('10-25-2015', '10-25-2016');
+  //promiseGame('1-18-2017');
   for (let date of dates) {
     promiseGame(date);
   }
@@ -181,9 +181,24 @@ function getAllGamesInfo() {
     return nba.stats.scoreboard({ gameDate: date })
       .then((stats) => {
         const processedStats = processScoreBoard(stats);
-        saveGame(date, processedStats);
+
+        for (let i = 0; i < processedStats.gameInfo.length; i++) {
+          promiseBoxscoresInfo(processedStats.gameInfo[i].gameId);
+        }
+        //saveGame(date, processedStats);
       })
       .catch(err => { console.log(err) });
+  }
+
+  function promiseBoxscoresInfo(gameId) {
+    return nba.stats.boxScore({ GameID: gameId })
+      .then((stats) => {
+        const parsedStats = parseBoxScoreStats(stats);
+        saveGameAndPlayerStats(gameId, parsedStats);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function saveGame(date, stats) {
@@ -195,7 +210,18 @@ function getAllGamesInfo() {
     });
   }
 
+  function saveGameAndPlayerStats(gameId, stats) {
+    gamesDB.put(gameId, JSON.stringify(stats), (err) => {
+      if (err) return console.log(err);
+      console.log('\n********************************************');
+      console.log(`Saving Boxscore Team & Player data for Game #${gameId}...`);
+      console.log('********************************************\n');
+    })
+  }
+
+
 }
+
 
 
 

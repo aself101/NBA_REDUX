@@ -34,13 +34,18 @@ exports.boxscores = (req, res, next) => {
 
 exports.boxscoresInfo = (req, res, next) => {
   const GameID = req.query.GameID;
-  nba.stats.boxScore({ GameID: GameID })
-    .then((stats) => {
-      res.json({ boxScoreStats: parseBoxScoreStats(stats)});
-    })
-    .catch((err) => {
-      return next(err, null);
-    });
+  gamesDB.get(GameID, (err, stats) => {
+    if (err) {
+      nba.stats.boxScore({ GameID: GameID })
+        .then((stats) => {
+          res.json({ boxScoreStats: parseBoxScoreStats(stats)});
+        })
+        .catch((err) => {
+          return next(err, null);
+        });
+    }
+    res.json({ boxScoreStats: JSON.parse(stats)});
+  });
 }
 
 exports.player = (req, res, next) => {
