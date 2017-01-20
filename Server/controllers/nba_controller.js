@@ -5,7 +5,7 @@ const level = require('level');
 const playersDB = level('./playersDB');
 const playerShotsDB = level('./playerShotsDB');
 const teamsDB = level('./teamsDB');
-
+const gamesDB = level('./gamesDB');
 
 const { processStandings, processScoreBoard,
   cleanUpTankathon, getTankathon, getAllPlayers,
@@ -18,13 +18,18 @@ const { processStandings, processScoreBoard,
 *******************************************************************************/
 exports.boxscores = (req, res, next) => {
   const date = req.query.date;
-  nba.stats.scoreboard({ gameDate: date })
-    .then((stats) => {
-      res.json({stats: processScoreBoard(stats)});
-    })
-    .catch((err) => {
-      return next(err, null);
-    });
+  gamesDB.get(date, (err, stats) => {
+    if (err) {
+      return nba.stats.scoreboard({ gameDate: date })
+        .then((stats) => {
+          res.json({stats: processScoreBoard(stats)});
+        })
+        .catch((err) => {
+          return next(err, null);
+        });
+    }
+    res.json({stats: JSON.parse(stats)});
+  });
 }
 
 exports.boxscoresInfo = (req, res, next) => {

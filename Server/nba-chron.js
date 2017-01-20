@@ -1,7 +1,7 @@
 const nba = require('nba');
 const _nba = require('nba.js').default;
 const level = require('level');
-
+const moment = require('moment');
 
 const teamsDB = level('./teamsDB');
 const gamesDB = level('./gamesDB');
@@ -116,11 +116,8 @@ function getAllPlayersInfo() {
 }
 
 /*
-  nba.teams
-  nba.stats.playerStats({TeamID:[teamid]})
-  nba.stats.commonTeamRoster({TeamID:"1610612738"})
-  nba.stats.teamShooting({TeamID:"1610612738"})
-  nba.stats.shots({TeamID:"1610612758"})
+  A bit redundant pulling nba.shots for both players and teams
+  Though data is pulled pretty much instantly from levelDB
 */
 function getAllTeamsInfo() {
   var teams = nba.teams;
@@ -155,11 +152,48 @@ function getAllTeamsInfo() {
 
 }
 
+
 /*
 
-
+ Stick to date formatting '1-19-2017'
 */
+function getArrayOfDates(dateFrom, dateTo) {
+  var dates = [];
+  var dFrom = moment(dateFrom).format('MM-DD-YYYY');
+  var dTo = moment(dateTo).format('MM-DD-YYYY');
+
+  for (var m = moment(dFrom); m.diff(dTo, 'days') <= 0; m.add(1, 'days')) {
+    dates.push(m.format('MM-DD-YYYY'));
+  }
+
+  return dates;
+}
+
 function getAllGamesInfo() {
+  var today = moment().format('MM-DD-YYYY');
+  var dates = getArrayOfDates('10-25-2010', '10-25-2015');
+
+  for (let date of dates) {
+    promiseGame(date);
+  }
+
+  function promiseGame(date) {
+    return nba.stats.scoreboard({ gameDate: date })
+      .then((stats) => {
+        const processedStats = processScoreBoard(stats);
+        saveGame(date, processedStats);
+      })
+      .catch(err => { console.log(err) });
+  }
+
+  function saveGame(date, stats) {
+    gamesDB.put(date, JSON.stringify(stats), (err) => {
+      if (err) return console.log(err);
+      console.log('\n********************************************');
+      console.log(`Saving Boxscores for ${date}...`);
+      console.log('********************************************\n');
+    });
+  }
 
 }
 
@@ -265,9 +299,10 @@ function processScoreBoard(stats) {
 
 
 function* main() {
-  yield getAllPlayersInfo();
+  /*yield getAllPlayersInfo();
   yield getAllTeamsInfo();
-  yield getPlayerShots();
+  yield getPlayerShots();*/
+  yield getAllGamesInfo();
 };
 
 for (var func of main()) {}
