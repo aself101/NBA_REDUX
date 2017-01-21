@@ -2,10 +2,10 @@ const nba = require('nba');
 const _nba = require('nba.js').default;
 const level = require('level');
 
-const playersDB = level('./playersDB');
-const playerShotsDB = level('./playerShotsDB');
-const teamsDB = level('./teamsDB');
-const gamesDB = level('./gamesDB');
+const playersDB = level('./nba-dbs/playersDB');
+const playerShotsDB = level('./nba-dbs/playerShotsDB');
+const teamsDB = level('./nba-dbs/teamsDB');
+const gamesDB = level('./nba-dbs/gamesDB');
 
 const { processStandings, processScoreBoard,
   cleanUpTankathon, getTankathon, getAllPlayers,
@@ -22,29 +22,33 @@ exports.boxscores = (req, res, next) => {
     if (err) {
       return nba.stats.scoreboard({ gameDate: date })
         .then((stats) => {
-          res.json({stats: processScoreBoard(stats)});
+          return res.json({stats: processScoreBoard(stats)});
         })
         .catch((err) => {
           return next(err, null);
         });
     }
-    res.json({stats: JSON.parse(stats)});
+    return res.json({stats: JSON.parse(stats)});
   });
 }
 
 exports.boxscoresInfo = (req, res, next) => {
   const GameID = req.query.GameID;
   gamesDB.get(GameID, (err, stats) => {
-    if (err) {
-      nba.stats.boxScore({ GameID: GameID })
-        .then((stats) => {
-          res.json({ boxScoreStats: parseBoxScoreStats(stats)});
-        })
-        .catch((err) => {
-          return next(err, null);
-        });
+    switch (true) {
+      case (stats === undefined):
+        return res.json({ boxScoreStats: [] });
+      case err:
+        return nba.stats.boxScore({ GameID: GameID })
+          .then((stats) => {
+            return res.json({ boxScoreStats: parseBoxScoreStats(stats)});
+          })
+          .catch((err) => {
+            return next(err, null);
+          });;
+      default:
+        return res.json({ boxScoreStats: JSON.parse(stats)});;
     }
-    res.json({ boxScoreStats: JSON.parse(stats)});
   });
 }
 
@@ -56,7 +60,7 @@ exports.player = (req, res, next) => {
 
     playerShotsDB.get(PlayerID, (err, shots) => {
       if (err) return next(err, null);
-      res.json({
+      return res.json({
         playerStats: JSON.parse(stats),
         playerShots: JSON.parse(shots)
       });

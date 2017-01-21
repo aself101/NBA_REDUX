@@ -3,46 +3,14 @@ const _nba = require('nba.js').default;
 const level = require('level');
 const moment = require('moment');
 
-const teamsDB = level('./teamsDB');
-const gamesDB = level('./gamesDB');
-const playersDB = level('./playersDB');
-const playerShotsDB = level('./playerShotsDB');
+const { processStandings, processScoreBoard,
+  conferenceEast, conferenceWest,
+  parseBoxScoreStats } = require('./controllers/helpers');
 
-const conferenceEast = {
-  'ATL': 'ATL',
-  'BOS': 'BOS',
-  'BKN': 'BKN',
-  'CHA': 'CHA',
-  'CHI': 'CHI',
-  'CLE': 'CLE',
-  'DET': 'DET',
-  'IND': 'IND',
-  'MIA': 'MIA',
-  'MIL': 'MIL',
-  'NYK': 'NYK',
-  'ORL': 'ORL',
-  'PHI': 'PHI',
-  'TOR': 'TOR',
-  'WAS': 'WAS'
-};
-
-const conferenceWest = {
-  'DAL': 'DAL',
-  'DEN': 'DEN',
-  'GSW': 'GSW',
-  'HOU': 'HOU',
-  'LAC': 'LAC',
-  'LAL': 'LAL',
-  'MEM': 'MEM',
-  'MIN': 'MIN',
-  'NOP': 'NOP',
-  'OKC': 'OKC',
-  'PHX': 'PHX',
-  'POR': 'POR',
-  'SAC': 'SAC',
-  'SAS': 'SAS',
-  'UTA': 'UTA'
-};
+const teamsDB = level('./nba-dbs/teamsDB');
+const gamesDB = level('./nba-dbs/gamesDB');
+const playersDB = level('./nba-dbs/playersDB');
+const playerShotsDB = level('./nba-dbs/playerShotsDB');
 
 /* Get all shots from all players */
 function getPlayerShots() {
@@ -158,6 +126,7 @@ function getAllTeamsInfo() {
  Stick to date formatting '1-19-2017'
 */
 function getArrayOfDates(dateFrom, dateTo) {
+  if (!dateFrom || !dateTo) return;
   var dates = [];
   var dFrom = moment(dateFrom).format('MM-DD-YYYY');
   var dTo = moment(dateTo).format('MM-DD-YYYY');
@@ -169,12 +138,17 @@ function getArrayOfDates(dateFrom, dateTo) {
   return dates;
 }
 
-function getAllGamesInfo() {
-  var today = moment().format('MM-DD-YYYY');
-  var dates = getArrayOfDates('10-25-2015', '10-25-2016');
-  //promiseGame('1-18-2017');
-  for (let date of dates) {
-    promiseGame(date);
+function getGamesInfo(isTodayOnly) {
+  var today = moment('1-20-2017').format('MM-DD-YYYY');
+
+  if (isTodayOnly) {
+    promiseGame(today);
+  } else {
+    // Example parameters: '10-25-2015', '10-25-2016'
+    var dates = getArrayOfDates('10-25-2011', '10-25-2012');
+    for (let date of dates) {
+      promiseGame(date);
+    }
   }
 
   function promiseGame(date) {
@@ -185,7 +159,7 @@ function getAllGamesInfo() {
         for (let i = 0; i < processedStats.gameInfo.length; i++) {
           promiseBoxscoresInfo(processedStats.gameInfo[i].gameId);
         }
-        //saveGame(date, processedStats);
+        saveGame(date, processedStats);
       })
       .catch(err => { console.log(err) });
   }
@@ -225,114 +199,15 @@ function getAllGamesInfo() {
 
 
 
-function parseBoxScoreStats(stats) {
-  const playerTeamStats = stats.resultSets;
-  // Main state obj to be returned
-  var boxScoreObj = {
-    playerHeaders: {},
-    players: {
-      team1: [],
-      team2: []
-    },
-    teamHeaders: {},
-    teams: []
-  };
-
-  var playerStatsHeaders = {}, teamStatsHeaders = {};
-  var playerStatObj = {}, teamStatObj = {};
-  var playerStatArr = [], teamStatArr = [];
-  var playersT1 = [], playersT2 = [];
-
-  var playerGameHeaders = playerTeamStats[0].headers;
-  var playerGameStats = playerTeamStats[0].rowSet;
-
-  var teamGameHeaders = playerTeamStats[1].headers;
-  var teamGameStats = playerTeamStats[1].rowSet;
-
-  // Headers obj for team/player table headers
-  for (let item of playerGameHeaders) playerStatsHeaders[item] = item;
-  for (let item of teamGameHeaders) teamStatsHeaders[item] = item;
-
-  // Place each player in an obj with headers: stats structure
-  // for ease of table display
-  for (let player of playerGameStats) {
-    for (let key in player) {
-      if (player[key] === null) player[key] = '';
-      playerStatObj[playerGameHeaders[key]] = player[key];
-    }
-    playerStatArr.push(playerStatObj);
-    playerStatObj = {};
-  }
-
-  for (let team of teamGameStats) {
-    for (let key in team) {
-      teamStatObj[teamGameHeaders[key]] = team[key];
-    }
-    teamStatArr.push(teamStatObj);
-    teamStatObj = {};
-  }
-  // Split players into individual teams
-  let teamAbbr = playerStatArr[0].TEAM_ABBREVIATION;
-  for (let i = 0; i < playerStatArr.length; i++) {
-    if (playerStatArr[i].TEAM_ABBREVIATION === teamAbbr) playersT1.push(playerStatArr[i]);
-    else playersT2.push(playerStatArr[i]);
-  }
-
-  // TODO: Remove headers after modals are up
-
-  boxScoreObj.players = {
-    team1: playersT1,
-    team2: playersT2
-  };
-  boxScoreObj.teams = teamStatArr;
-  boxScoreObj.teamHeaders = teamStatsHeaders;
-
-  return boxScoreObj;
-}
-
-function processScoreBoard(stats) {
-  var _keys = Object.keys(stats);
-  let i, j, k;
-
-  var state = {
-    teams: [],
-    gameInfo: stats.gameHeader,
-    lastMeeting: []
-  };
-  // Get lineScores
-  for (j = 0; j < stats.lineScore.length; j++) {
-    if (j % 2 === 0) {
-      state.teams.push(
-        Object.assign({}, {
-          team1: stats.lineScore[j],
-          team2: stats.lineScore[j+1]
-        })
-      );
-    }
-  }
-  // Make sure the network request pulls all line up properly
-  // There was an issue where the lineScores were not lining up with the lastMeetings
-  for (i = 0; i < state.teams.length; i++) {
-    for (k = 0; k < stats.lastMeeting.length; k++) {
-      if (state.teams[i].team1.gameId === stats.lastMeeting[k].gameId) {
-        state.lastMeeting.push(stats.lastMeeting[k]);
-      }
-    }
-  }
-
-  return state;
-}
-
-
 function* main() {
   /*yield getAllPlayersInfo();
   yield getAllTeamsInfo();
   yield getPlayerShots();*/
-  yield getAllGamesInfo();
+  yield getGamesInfo(true);
 };
 
 for (var func of main()) {}
-
+console.log(__dirname);
 
 
 

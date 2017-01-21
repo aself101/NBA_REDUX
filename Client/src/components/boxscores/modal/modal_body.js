@@ -1,5 +1,5 @@
 import React from 'react';
-import PlayerTable from './modal_team_player_table';
+import PlayerTable from './modal_player_table';
 import { TEAM_IMG_URL } from '../../../actions';
 
 const ModalBody = ({team1, team2, gameStats}) => {

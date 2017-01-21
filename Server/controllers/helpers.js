@@ -24,6 +24,8 @@ const conferenceEast = {
   'WAS': 'WAS'
 };
 
+module.exports = conferenceEast;
+
 const conferenceWest = {
   'DAL': 'DAL',
   'DEN': 'DEN',
@@ -42,7 +44,7 @@ const conferenceWest = {
   'UTA': 'UTA'
 };
 
-
+module.exports = conferenceWest;
 
 /*******************************************************************************
 Clean up of initial data pull
