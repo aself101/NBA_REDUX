@@ -37,7 +37,13 @@ exports.boxscoresInfo = (req, res, next) => {
   gamesDB.get(GameID, (err, stats) => {
     switch (true) {
       case (stats === undefined):
-        return res.json({ boxScoreStats: [] });
+        return nba.stats.boxScore({ GameID: GameID })
+          .then((stats) => {
+            return res.json({ boxScoreStats: parseBoxScoreStats(stats)});
+          })
+          .catch((err) => {
+            return next(err, null);
+          });
       case err:
         return nba.stats.boxScore({ GameID: GameID })
           .then((stats) => {
@@ -45,7 +51,7 @@ exports.boxscoresInfo = (req, res, next) => {
           })
           .catch((err) => {
             return next(err, null);
-          });;
+          });
       default:
         return res.json({ boxScoreStats: JSON.parse(stats)});;
     }
@@ -65,7 +71,6 @@ exports.player = (req, res, next) => {
         playerShots: JSON.parse(shots)
       });
     })
-    //res.json({ playerStats: JSON.parse(stats) })
   });
 }
 

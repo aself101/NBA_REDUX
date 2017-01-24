@@ -139,7 +139,7 @@ function getArrayOfDates(dateFrom, dateTo) {
 }
 
 function getGamesInfo(isTodayOnly) {
-  var today = moment('1-20-2017').format('MM-DD-YYYY');
+  var today = moment().format('MM-DD-YYYY');
 
   if (isTodayOnly) {
     promiseGame(today);
@@ -207,7 +207,7 @@ function* main() {
 };
 
 for (var func of main()) {}
-console.log(__dirname);
+
 
 
 

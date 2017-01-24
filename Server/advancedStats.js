@@ -52,67 +52,83 @@ export function defRebPct(pDRB, pMP, tMP, tDRB, oORB) {
   Missed FG Possessions, Missed FT Possessions, and Turnovers.
 
 */
-export function offensiveRating(pFGM, pFGA, pPTS, pFTM, pMP, pORB, tMP, tAST, tFGM,
-  tFGA, tPTS, tFTM, tFTA, tORB, oORB, oTRB, tTOV) {
+export function offensiveRating(pFGM, pFGA, pPTS, p3PM, pFTM, pMP, pORB, tMP, tAST, tFGM,
+  tFGA, tPTS, t3PM, tFTM, tFTA, tORB, oORB, oTRB, tTOV) {
 
   /* Scoring possessions */
   function scPoss() {
-    /* Building blocks */
-    function fgPart() {
-      return pFGM * (1 - 0.5 * ((pPTS - pFTM) / (2 * pFGA)) * qAst());
-    }
-
-    function qAst() {
-      return ((pMP / (tMP / 5)) * (1.14 * ((tAST - pAST) / tFGM ))) +
-        ((((tAST / tMP) * pMP * 5 - pAST) / ((tFGM / tMP) * pMP * 5 - pFGM)) *
-        (1 - (pMP / (tMP / 5))));
-    }
-
-    function astPart() {
-      return 0.5 * (((tPTS - tFTM) - (pPTS - pFTM)) / (2 * (tFGA - pFGA))) * pAST;
-    }
-
-    function ftPart() {
-      return (1 - Math.pow((1 - (pFTM / pFTA)), 2)) * 0.4 * pFTA;
-    }
-
-    function teamScoringPoss() {
-      return tFGM + (1 - Math.pow((1 - (tFTM / tFTA)), 2)) * tFTA * 0.4;
-    }
-
-    function teamORBWeight() {
-      return ((1 - teamORBPct()) * teamPlayPct()) / ((1 - teamORBPct()) * teamPlayPct() +
-        teamORBPct() * (1 - teamPlayPct()));
-    }
-
-    function teamORBPct() {
-      return tORB / (tORB + (oTRB - oORB));
-    }
-
-    function teamPlayPct() {
-      return teamScoringPoss() / (tFGA + tFTA * 0.4 + tTOV);
-    }
-
-    function orbPart() {
-      return pORB * teamORBWeight() * teamPlayPct();
-    }
-
     return (fgPart() + astPart() + ftPart()) * (1 - (tORB / teamScoringPoss()) *
       teamORBWeight() * teamPlayPct()) + orbPart();
   }
+  /* Building blocks */
+  function fgPart() {
+    return pFGM * (1 - 0.5 * ((pPTS - pFTM) / (2 * pFGA)) * qAst());
+  }
 
+  function qAst() {
+    return ((pMP / (tMP / 5)) * (1.14 * ((tAST - pAST) / tFGM ))) +
+      ((((tAST / tMP) * pMP * 5 - pAST) / ((tFGM / tMP) * pMP * 5 - pFGM)) *
+      (1 - (pMP / (tMP / 5))));
+  }
 
+  function astPart() {
+    return 0.5 * (((tPTS - tFTM) - (pPTS - pFTM)) / (2 * (tFGA - pFGA))) * pAST;
+  }
+
+  function ftPart() {
+    return (1 - Math.pow((1 - (pFTM / pFTA)), 2)) * 0.4 * pFTA;
+  }
+
+  function teamScoringPoss() {
+    return tFGM + (1 - Math.pow((1 - (tFTM / tFTA)), 2)) * tFTA * 0.4;
+  }
+
+  function teamORBWeight() {
+    return ((1 - teamORBPct()) * teamPlayPct()) / ((1 - teamORBPct()) * teamPlayPct() +
+      teamORBPct() * (1 - teamPlayPct()));
+  }
+
+  function teamORBPct() {
+    return tORB / (tORB + (oTRB - oORB));
+  }
+
+  function teamPlayPct() {
+    return teamScoringPoss() / (tFGA + tFTA * 0.4 + tTOV);
+  }
+
+  function orbPart() {
+    return pORB * teamORBWeight() * teamPlayPct();
+  }
 
   /* Missed FG and Missed FT Possessions */
-  function fgXPoss() {}
+  function fgXPoss() {
+    return (pFGA - pFGM) * (1 - 1.07 * teamORBPct());
+  }
 
-  function ftXPoss() {}
+  function ftXPoss() {
+    return (Math.pow((1 - (pFTM / pFTA)),2)) * 0.4 * pFTA;
+  }
 
   /* Total Possessions */
-  function totalPoss() {}
+  function totalPoss() {
+    return scPoss() + fgXPoss() + ftXPoss() + pTOV;
+  }
 
   /* Individual Points Produced */
   function ptsProduced() {
+
+  }
+
+  function pProdFGPart() {
+    return 2 * (pFGM + 0.5 * p3PM) * (1 - 0.5 ((pPTS - pFTM) / (2 * pFGA)) * qAst());
+  }
+
+  function pProdASTPart() {
+    return 2 * ((tFGM - pFGM + 0.5 * (t3PM - p3PM)) / (tFGM - pFGM)) * 0.5 *
+      (((tPTS - tFTM) - (pPTS - pFTM)) / (2 * (tFGA - pFGA))) * pAST;
+  }
+
+  function pProdORBPart() {
 
   }
 
