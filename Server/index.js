@@ -10,6 +10,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const router = require('./router');
+const spdy = require('spdy');
+const fs = require('fs');
 
 
 // App Setup
@@ -26,6 +28,13 @@ router(app);
 // Server Setup
 const PORT = process.env.PORT || 3090;
 const server = http.createServer(app);
+/*
+spdy
+  .createServer(options, app)
+  .listen(PORT, (err) => {
+    if (err) throw new Error(err);
+    console.log(`Server listening on http://localhost:${PORT}`);
+  })*/
 
 server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);

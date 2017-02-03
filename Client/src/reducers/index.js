@@ -6,6 +6,7 @@ import teamsReducer from './teams_reducer';
 import teamReducer from './team_reducer';
 import boxscoresReducer from './boxscores_reducer';
 import standingsReducer from './standings_reducer';
+import newsReducer from './news_reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   teams: teamsReducer,
   team: teamReducer,
   boxscores: boxscoresReducer,
-  standings: standingsReducer
+  standings: standingsReducer,
+  news: newsReducer
 });
 
 export default rootReducer;

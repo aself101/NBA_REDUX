@@ -5,6 +5,7 @@
 const osmosis = require('osmosis');
 const nba = require('nba');
 const _nba = require('nba.js').default;
+const feed = require('feed-read');
 
 const conferenceEast = {
   'ATL': 'ATL',
@@ -45,7 +46,39 @@ const conferenceWest = {
 };
 
 module.exports = conferenceWest;
-
+/* for news feeds */
+const teamnames = {
+  '1610612737': 'hawks',
+  '1610612738': 'celtics',
+  '1610612751': 'nets',
+  '1610612766': 'hornets',
+  '1610612741': 'bulls',
+  '1610612739': 'cavaliers',
+  '1610612742': 'mavericks',
+  '1610612743': 'nuggets',
+  '1610612765': 'pistons',
+  '1610612744': 'warriors',
+  '1610612745': 'rockets',
+  '1610612754': 'pacers',
+  '1610612746': 'clippers',
+  '1610612747': 'lakers',
+  '1610612763': 'grizzlies',
+  '1610612748': 'heat',
+  '1610612749': 'bucks',
+  '1610612750': 'timberwolves',
+  '1610612740': 'pelicans',
+  '1610612752': 'knicks',
+  '1610612760': 'thunder',
+  '1610612753': 'magic',
+  '1610612755': 'sixers',
+  '1610612756': 'suns',
+  '1610612757': 'blazers',
+  '1610612758': 'kings',
+  '1610612759': 'spurs',
+  '1610612761': 'raptors',
+  '1610612762': 'jazz',
+  '1610612764': 'wizards'
+};
 /*******************************************************************************
 Clean up of initial data pull
 Setup state trees for redux
@@ -261,6 +294,55 @@ module.exports.parseBoxScoreStats = function(stats) {
 
   return boxScoreObj;
 }
+
+
+
+module.exports.getTeamFeeds = function(ID) {
+  var nbaUrl;
+  switch (ID) {
+    case 'espn':
+      nbaUrl = 'http://www.espn.com/espn/rss/nba/news';
+      return new Promise(function(resolve, reject) {
+        feed(nbaUrl, (err, articles) => {
+          if (err) reject(err);
+          resolve(articles);
+        });
+      });
+    case 'si':
+      nbaUrl = 'http://www.si.com/rss/si_nba.rss';
+      return new Promise(function(resolve, reject) {
+        feed(nbaUrl, (err, articles) => {
+          if (err) reject(err);
+          resolve(articles);
+        });
+      });
+    case ID:
+      nbaUrl = `http://www.nba.com/${teamnames[ID]}/rss.xml`;
+      return new Promise(function(resolve, reject) {
+        feed(nbaUrl, (err, articles) => {
+          if (err) reject(err);
+          resolve(articles);
+        });
+      });
+    default:
+      return;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

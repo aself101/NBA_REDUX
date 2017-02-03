@@ -9,8 +9,7 @@ const gamesDB = level('./nba-dbs/gamesDB');
 
 const { processStandings, processScoreBoard,
   cleanUpTankathon, getTankathon, getAllPlayers,
-  parseBoxScoreStats } = require('./helpers');
-
+  parseBoxScoreStats, getTeamFeeds } = require('./helpers');
 
 
 /*******************************************************************************
@@ -105,7 +104,16 @@ exports.team = (req, res, next) => {
   });
 }
 
-
+exports.news = (req, res, next) => {
+  const ID = req.query.ID;
+  getTeamFeeds(ID)
+    .then((articles) => {
+      res.json({ articles: articles });
+    })
+    .catch(err => {
+      return next(err);
+    });
+}
 
 
 

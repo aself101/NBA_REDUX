@@ -6,7 +6,7 @@ import {
   AUTH_USER, UNAUTH_USER, AUTH_ERROR, FETCH_MESSAGE, FETCH_PLAYERS,
   FETCH_BOXSCORES, FETCH_ERROR, FETCH_PLAYER, FETCH_TEAMS, FETCH_STANDINGS,
   FETCH_REG_SEASON_PLAYER_STATS, FETCH_CAREER_REG_SEASON_PLAYER_STATS,
-  FETCH_TANKATHON, FETCH_BOXSCORE_TEAM_PLAYER_INFO, FETCH_TEAM
+  FETCH_TANKATHON, FETCH_BOXSCORE_TEAM_PLAYER_INFO, FETCH_TEAM, FETCH_TEAM_NEWS
 } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
@@ -162,6 +162,20 @@ export function fetchTeams() {
     dispatch({ type: FETCH_TEAMS, payload: nba.teams });
   }
 }
+
+export function fetchTeamNewsServer(ID, teamName) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/news`, {
+      params: {
+        ID: ID
+      },
+      headers: { authorization: localStorage.getItem('token') }
+    })
+    .then((res) => JSON.parse(res.request.response))
+    .then((res) => dispatch(fetchNews(res, teamName)))
+    .catch((err) => dispatch(error(err)));
+  }
+}
 /*****************************************************************************
   SYNCHRONOUS ACTIONS
 *****************************************************************************/
@@ -169,6 +183,14 @@ export function fetchStandings(standings) {
   return {
     type: FETCH_STANDINGS,
     payload: standings
+  };
+}
+
+export function fetchNews(news, teamName) {
+  return {
+    type: FETCH_TEAM_NEWS,
+    payload: news,
+    team: teamName
   };
 }
 

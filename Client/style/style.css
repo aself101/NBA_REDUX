@@ -147,6 +147,14 @@ body {
   border-color: rgb(100, 100, 100);
 }
 
+.team-feed {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: scroll;
+  max-height: 700px;
+}
+
 .teamWin {
   background-color: #5cb85c;
 }
