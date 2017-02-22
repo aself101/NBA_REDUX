@@ -138,7 +138,11 @@ body {
 .teams {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
+}
+
+.single-team {
+  display: flex;
 }
 
 .boxscores {

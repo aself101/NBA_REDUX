@@ -7,21 +7,19 @@ import Team from '../components/team';
 class Teams extends Component {
   constructor(props) {
     super(props);
-    this.fetchTeam = this.fetchTeam.bind(this);
-  }
-  fetchTeam(teamId) {
-    return this.props.fetchTeamData(teamId);
   }
   render() {
     if (!this.props.teams) return <span></span>;
 
     return (
-      <div className="teams">
-        {
-          this.props.teams.map((team) => (
-            <Team key={team.teamId} team={team} fetchTeam={this.props.fetchTeamData} />
-          ))
-        }
+      <div>
+        <div className="teams">
+          {
+            this.props.teams.map((team) => (
+              <Team key={team.teamId} team={team} fetchTeam={this.props.fetchTeamData} />
+            ))
+          }
+        </div>
       </div>
     );
   }

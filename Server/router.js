@@ -1,22 +1,23 @@
 /*
   All Routes
 */
+const passport = require('passport');
+const path = require("path");
+
 const Authentication = require('./controllers/authentication');
 const { boxscores, player, standings, tankathon,
   boxscoresInfo, team, news } = require('./controllers/nba_controller');
 const passportService = require('./services/passport');
-
-const passport = require('passport');
-
 const requireAuth = passport.authenticate('jwt', { session: false });
 const requireSignin = passport.authenticate('local', { session: false });
 
 
-
-
-
 module.exports = (app) => {
+
   /* GETS */
+  /*app.get('/', function(req, res) {
+    res.sendFile('index.html');
+  })*/
   app.get('/boxscores', requireAuth, boxscores);
   app.get('/boxscoresInfo', requireAuth, boxscoresInfo);
   app.get('/player', requireAuth, player);

@@ -23,18 +23,12 @@ app.use(morgan('combined'));
 app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json({type: '*/*'}));
+app.use(express.static(__dirname+'/build'));
 router(app);
 
 // Server Setup
 const PORT = process.env.PORT || 3090;
 const server = http.createServer(app);
-/*
-spdy
-  .createServer(options, app)
-  .listen(PORT, (err) => {
-    if (err) throw new Error(err);
-    console.log(`Server listening on http://localhost:${PORT}`);
-  })*/
 
 server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);

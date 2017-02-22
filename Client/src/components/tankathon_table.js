@@ -54,6 +54,7 @@ function processTeamNames(team) {
           var fromTeam = _team[0].split(/(?=[A-Z])/)[0];
           var fromTeamAbbr = _team[0].split(/(?=[A-Z])/).slice(1).join('');
           var toTeamAbbr = _team[1];
+
           return (
             <span>
               <img src={`${TEAM_IMG_URL}/${fromTeamAbbr}.svg`}
@@ -74,6 +75,9 @@ function processTeamNames(team) {
           var fromTeamAbbr = _team[1].split(/(?=[A-Z])/).slice(1).join('');
           var toTeamAbbr = _team[2];
           if (fromTeamAbbr === 'GS') fromTeamAbbr = 'GSW';
+          if (toTeamAbbr === 'GS') toTeamAbbr = 'GSW';
+          if (fromTeamAbbr === 'NO') fromTeamAbbr = 'NOP';
+          if (toTeamAbbr === 'NO') toTeamAbbr = 'NOP';
           return (
             <span>
               <img src={`${TEAM_IMG_URL}/${fromTeamAbbr}.svg`}
@@ -117,6 +121,7 @@ const TankathonTable = ({standings}) => {
       <tbody>
         {
           standings.map((team, index) => {
+            //console.log(team);
             return (
               <tr key={team.team}>
                 <td>{index + 1}</td>

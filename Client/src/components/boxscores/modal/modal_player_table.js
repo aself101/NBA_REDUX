@@ -1,6 +1,7 @@
 import React from 'react';
 
-const PlayerTable = ({players}) => {
+const PlayerTable = ({players, teamStats}) => {
+  if (!teamStats) return <span></span>;
   return (
     <div className="boxscore-player-table">
       <table className="table table-responsive table-bordered table-hover table-condensed">
@@ -54,6 +55,23 @@ const PlayerTable = ({players}) => {
               )
             })
           }
+          <tr>
+            <td></td>
+            <td></td>
+            <td><b>{ teamStats.FGM }-{ teamStats.FGA }</b></td>
+            <td><b>{ teamStats.FG3M }-{ teamStats.FG3A }</b></td>
+            <td><b>{ teamStats.FTM }-{ teamStats.FTA }</b></td>
+            <td><b>{ teamStats.OREB }</b></td>
+            <td><b>{ teamStats.DREB }</b></td>
+            <td><b>{ teamStats.REB }</b></td>
+            <td><b>{ teamStats.AST }</b></td>
+            <td><b>{ teamStats.STL }</b></td>
+            <td><b>{ teamStats.BLK }</b></td>
+            <td><b>{ teamStats.TO }</b></td>
+            <td><b>{ teamStats.PF }</b></td>
+            <td><b>{ teamStats.PTS }</b></td>
+            <td><b>{ teamStats.PLUS_MINUS }</b></td>
+          </tr>
         </tbody>
       </table>
     </div>
